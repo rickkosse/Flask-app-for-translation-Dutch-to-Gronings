@@ -6,7 +6,7 @@ sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/"
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras")
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras/src/keras-wrapper/keras-wrapper")
 
-from flask import Flask,render_template,url_for,request
+from flask import Flask,render_template,url_for,request, jsonify
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
@@ -40,28 +40,31 @@ def write_to_file(comments):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('form.html')
 
-@app.route('/predict',methods=['POST'])
+@app.route('/process',methods=['POST'])
 def predict():
 
-    #Alternative Usage of Saved Model
-    # ytb_model = open("naivebayes_spam_model.pkl","rb")
-    # clf = joblib.load(ytb_model)
+    # name = request.form['name']
+    # print(name)
+
+    # if name:
+    #     newName = name[::-1]
+
+    #     return jsonify({'name' : newName})
 
     if request.method == 'POST':
-
-        namequery = request.form['namequery']
-
+        namequery = request.form['name']
         processed = process(namequery)
         char_encoding= convert_char(processed)
         create_file = write_to_file(char_encoding)
         with graph.as_default():
             output = get_predictions()
         output_sen = restore(output)
+        return jsonify({'name' : output})
    
 
-    return render_template('result.html',prediction = output_sen)
+    # return render_template('result.html',prediction = {{ output }})
 
 
 
