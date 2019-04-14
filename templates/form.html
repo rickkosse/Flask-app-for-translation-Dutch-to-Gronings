@@ -2,89 +2,64 @@
 <html>
 <head>
 
-  <style>
-/*.ad-left {
-  float: left;
-  }*/
-/*span.b {
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  padding: 5px;
-  border: 1px solid blue;    
-  background-color: yellow; 
-}
 
-span.c {
-  display: block;
-  width: 100px;
-  height: 100px;
-  padding: 5px;
-  border: 1px solid blue;    
-  background-color: yellow; 
-  }*/
-/*  div.form-group{
-    float: left;
-    /*margin-left: 100px;*/
- /*   div.alert alert-success{
-      float: left;
-      margin-right: 10000px;
-      }*/
-    </style>
+  <title>Gro>NL</title>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<!-- 
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
 
-    <title>Gro>NL</title>
+  <!-- Latest compiled and minified CSS -->
+  <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <!-- Latest compiled and minified CSS -->
-   <!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+ -->
 
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
-
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    <script src="{{ url_for('static', filename='js/form.js') }}"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="jumbotron" style="background-color:#1daeff !important;">
-        <h2 style="color:#fff;">Translation system</h2>      
-        <p style="color:#fff;">Using Deep Learning to translate</p>
-      </div>
-      <p>Rick Kosse</p>           
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron" style="background-color:#1daeff !important;">
+      <h2 style="color:#fff;">Translation system</h2>      
+      <p style="color:#fff;">Using Deep Learning to translate</p>
     </div>
-    <div class="container">
-      <div class="panel-group">
-        <div class="panel panel-primary">
-          <div class="panel-heading" style="background-color:#1563ff ">Nederlands-Gronings</div>
-          <div class="panel-body">
-            <div class="container">
-              <form class="form-inline">
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label class="sr-only" for="nameInput">Translation</label>
-                      <!-- <textarea  type="text" class="form-control" id="nameInput" style="height:100px; width:400px" enctype="multipart/form-data"></textarea> -->
-                      <textarea class="form-control form-control-lg" id="nameInput" rows="3"></textarea>
-
-                    </div>
-                  </div>
-                  <div class="col-md-4 offset-md-4">
-                  <div id="successAlert" class="alert alert-dark" role="alert" style="display:none;"></div>
-                  <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
-                </div>
-                </div>
+    <p>Rick Kosse</p>           
+  </div>
+  <div class="container">
+    <div class="card-group">
+      <div class="card">
+        <div class="card-header" >Nederlands-Gronings</div>
+        <div class="card-body">
+          <div class="container">
+            <form class="form row justify-content-center">
+              <div class="form-group col-sm-12 col-lg-6">
+                <label class="sr-only" for="nameInput">Translation</label>
+                <textarea  type="textarea" class="form-control" rows="5" id="nameInput"></textarea>
                 <br>
-                <button type="submit" class="btn btn-secondary">Submit</button>
-              </form>
-              <br>
-            </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+              <div class="alert-container col-sm-12 col-lg-6">
+                <div id="successAlert" class="alert alert-secondary" role="alert" style="display:none;"></div>
+                <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+              </div>
+            </form>
+            <br>
           </div>
         </div>
       </div>
     </div>
-  </body>
-  </html>
+  </div>
+
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='css/styles.css') }}"></script>
+
+
+</body>
+</html>
