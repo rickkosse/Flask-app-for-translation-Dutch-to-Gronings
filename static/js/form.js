@@ -1,3 +1,15 @@
+$("#click-button").on('switch', firstClick)
+
+function firstClick() {
+    alert("First Clicked");
+    $("#click-button").off('switch').on('click', secondClick)
+}
+
+function secondClick() {
+    alert("Second Clicked");
+    $("#click-button").off('switch').on('click', firstClick)
+}
+
 $(document).ready(function() {
 
 	$('form').on('submit', function(event) {
@@ -7,7 +19,7 @@ $(document).ready(function() {
 				name : $('#nameInput').val()			
 			},
 			type : 'POST',
-			url : '/process'
+			url : '/predict'
 		})
 		.done(function(data) {
 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from __future__ import print_function
-
 import sys
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/")
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras")
@@ -29,8 +28,8 @@ def init():
     graph = tf.get_default_graph()
 
     return models, dataset, args, params
+
 def get_predictions():
-    # result= subprocess.Popen("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras/sample_ensemble.py -m /Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras/trained_models/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_16 -ds /Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras/datasets/Dataset_EuTrans_nlgro.pkl  --text /Users/rickkosse/Documents/RUG/flask_translation_env/Output.txt", shell=True, stdout=subprocess.PIPE)
     pred= pred_try.predicted(models, dataset, args, params)
     return pred
 
@@ -42,16 +41,19 @@ def write_to_file(comments):
 def home():
     return render_template('form.html')
 
-@app.route('/process',methods=['POST'])
+@app.route('/get_toggled_status') 
+def toggled_status():
+    current_status = request.args.get('status')
+    # if current_status == "gro-nl":
+    #     global gro_nl_models
+    # else:
+    #     global nl_gro_models
+    print(current_status)
+    return 'nl_gro' if current_status == 'gro_nl' else 'gro_nl'
+
+
+@app.route('/predict',methods=['POST'])
 def predict():
-
-    # name = request.form['name']
-    # print(name)
-
-    # if name:
-    #     newName = name[::-1]
-
-    #     return jsonify({'name' : newName})
 
     if request.method == 'POST':
         namequery = request.form['name']
@@ -61,10 +63,8 @@ def predict():
         with graph.as_default():
             output = get_predictions()
         output_sen = restore(output)
-        return jsonify({'name' : output})
-   
 
-    # return render_template('result.html',prediction = {{ output }})
+        return jsonify({'name' : output})
 
 
 
