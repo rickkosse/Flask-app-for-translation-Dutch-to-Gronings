@@ -22,10 +22,11 @@ app = Flask(__name__)
 Bootstrap(app)
 
 def init():
-    global models, dataset, args, params,graph
+    global models, dataset, args, params,graph, current_status
     # load the pre-trained Keras model
     models, dataset, args, params = pred_try.load_all()
     graph = tf.get_default_graph()
+    current_status = ""
 
     return models, dataset, args, params
 
@@ -43,14 +44,12 @@ def home():
 
 @app.route('/get_toggled_status') 
 def toggled_status():
+    global current_status
     current_status = request.args.get('status')
-    # if current_status == "gro-nl":
-    #     global gro_nl_models
-    # else:
-    #     global nl_gro_models
-    print(current_status)
-    return 'nl_gro' if current_status == 'gro_nl' else 'gro_nl'
 
+    print("deze loopt achter:",current_status)
+
+    return 'nl_gro' if current_status == 'gro_nl' else 'gro_nl'
 
 @app.route('/predict',methods=['POST'])
 def predict():
@@ -60,12 +59,12 @@ def predict():
         processed = process(namequery)
         char_encoding= convert_char(processed)
         create_file = write_to_file(char_encoding)
+        print("the current_status=", current_status)
         with graph.as_default():
             output = get_predictions()
         output_sen = restore(output)
 
         return jsonify({'name' : output})
-
 
 
 if __name__ == '__main__':
