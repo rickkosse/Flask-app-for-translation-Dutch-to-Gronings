@@ -16,7 +16,6 @@ header{
 	height:120px;
 	width:100%;
 	padding-top:30px;
-
 }
 
 .main-header{
@@ -39,13 +38,15 @@ header h2{
 
 }
 
-
-
-.btn-info {background-color: #2196F3;
+.btn-info {
+	background-color: #2196F3;
 	height:40px;
-	width:100px;} /* Blue */
-.btn-info:hover {background: #0b7dda;}
-
+	width:100px;
+}
+	 /* Blue */
+.btn-info:hover {
+	background: #0b7dda;
+}
 
 .resultss{
 	border-radius: 15px 50px;
