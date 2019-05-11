@@ -5,9 +5,13 @@ sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/"
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras")
 sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras/src/keras-wrapper/keras-wrapper")
 
-from flask import Flask,render_template,url_for,request, jsonify
+from flask import Flask,render_template,url_for,request, jsonify, abort
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
+from proces_and_convert_to_bpe import process_bpe, convert_char_bpe, restore_bpe
+
+
+
 import tensorflow as tf
 import sys
 import importlib.util
@@ -51,9 +55,9 @@ def toggled_status():
 
     return 'nl_gro' if current_status == 'gro_nl' else 'gro_nl'
 
-@app.route('/predict',methods=['POST'])
-def predict():
-
+@app.route('/predict_nl-gro',methods=['POST'])
+def predict_predict_nl_gro():
+    print("received nl-gro")
     if request.method == 'POST':
         namequery = request.form['name']
         processed = process(namequery)
@@ -65,6 +69,47 @@ def predict():
         output_sen = restore(output)
 
         return jsonify({'name' : output})
+
+    else:
+        return abort(404)
+
+
+@app.route('/predict_gro-nl',methods=['POST'])
+def predict_gro_nl():
+    print("received gro-nl")
+
+    if request.method == 'POST':
+        namequery = request.form['name']
+        processed = process_bpe(namequery)
+        char_encoding= convert_char(processed)
+        create_file = write_to_file(char_encoding)
+        print("the current_status=", current_status)
+        with graph.as_default():
+            output = get_predictions()
+        output_sen = restore(output)
+
+        return jsonify({'name' : output})
+
+    else:
+        return abort(404)
+
+@app.route('/predict_gro-nl',methods=['POST'])
+def predict_gro_nl_bpe():
+    print("received gro-nl")
+    if request.method == 'POST':
+        namequery = request.form['name']
+        processed = process(namequery)
+        char_encoding= convert_char(processed)
+        create_file = write_to_file(char_encoding)
+        print("the current_status=", current_status)
+        with graph.as_default():
+            output = get_predictions()
+        output_sen = restore(output)
+
+        return jsonify({'name' : output})
+
+    else:
+        return abort(404)
 
 
 if __name__ == '__main__':
