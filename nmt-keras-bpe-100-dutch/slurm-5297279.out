@@ -1,0 +1,578 @@
+Running on Peregrine
+[26/04/2019 16:01:21] $HOME=/home/s3243508
+[26/04/2019 16:01:21] CONFIGDIR=/home/s3243508/.config/matplotlib
+[26/04/2019 16:01:21] matplotlib data path: /home/s3243508/.local/lib/python3.6/site-packages/matplotlib/mpl-data
+[26/04/2019 16:01:22] loaded rc file /home/s3243508/.local/lib/python3.6/site-packages/matplotlib/mpl-data/matplotlibrc
+[26/04/2019 16:01:22] matplotlib version 3.0.2
+[26/04/2019 16:01:22] interactive is False
+[26/04/2019 16:01:22] platform is linux
+[26/04/2019 16:01:22] loaded modules: ['builtins', 'sys', '_frozen_importlib', '_imp', '_warnings', '_thread', '_weakref', '_frozen_importlib_external', '_io', 'marshal', 'posix', 'zipimport', 'encodings', 'codecs', '_codecs', 'encodings.aliases', 'encodings.utf_8', '_signal', '__main__', 'encodings.latin_1', 'io', 'abc', '_weakrefset', '_bootlocale', '_locale', 'site', 'os', 'errno', 'stat', '_stat', 'posixpath', 'genericpath', 'os.path', '_collections_abc', '_sitebuiltins', 'sysconfig', '_sysconfigdata_m_linux_x86_64-linux-gnu', 'types', 'functools', '_functools', 'collections', 'operator', '_operator', 'keyword', 'heapq', '_heapq', 'itertools', 'reprlib', '_collections', 'weakref', 'collections.abc', 'importlib', 'importlib._bootstrap', 'importlib._bootstrap_external', 'warnings', 'importlib.util', 'importlib.abc', 'importlib.machinery', 'contextlib', 'mpl_toolkits', 'encodings.cp437', '__future__', 'argparse', 'copy', 'copyreg', 're', 'enum', 'sre_compile', '_sre', 'sre_parse', 'sre_constants', 'textwrap', 'gettext', 'locale', 'struct', '_struct', 'ast', '_ast', 'logging', 'time', 'traceback', 'linecache', 'tokenize', 'token', 'string', '_string', 'threading', 'atexit', 'keras_wrapper', 'keras_wrapper.extra', 'keras_wrapper.extra.read_write', 'six', 'json', 'json.decoder', 'json.scanner', '_json', 'json.encoder', 'numpy', 'numpy._globals', 'numpy.__config__', 'numpy.version', 'numpy._import_tools', 'numpy.add_newdocs', 'numpy.lib', 'math', 'numpy.lib.info', 'numpy.lib.type_check', 'numpy.core', 'numpy.core.info', 'datetime', '_datetime', 'numpy.core.multiarray', 'numpy.core.umath', 'numpy.core._internal', 'numpy.compat', 'numpy.compat._inspect', 'numpy.compat.py3k', 'pathlib', 'fnmatch', 'ntpath', 'urllib', 'urllib.parse', 'ctypes', '_ctypes', 'ctypes._endian', 'numpy.core.numerictypes', 'numbers', 'numpy.core.numeric', 'pickle', '_compat_pickle', '_pickle', 'numpy.core.fromnumeric', 'numpy.core._methods', 'numpy.core.arrayprint', 'numpy.core.defchararray', 'numpy.core.records', 'numpy.core.memmap', 'numpy.core.function_base', 'numpy.core.machar', 'numpy.core.getlimits', 'numpy.core.shape_base', 'numpy.core.einsumfunc', 'numpy.testing', 'unittest', 'unittest.result', 'unittest.util', 'unittest.case', 'difflib', 'pprint', 'unittest.suite', 'unittest.loader', 'unittest.main', 'unittest.runner', 'unittest.signals', 'signal', 'numpy.testing.decorators', 'numpy.testing.nose_tools', 'numpy.testing.nose_tools.decorators', 'numpy.testing.nose_tools.utils', 'shutil', 'zlib', 'bz2', '_compression', '_bz2', 'lzma', '_lzma', 'pwd', 'grp', 'tempfile', 'random', 'hashlib', '_hashlib', '_blake2', '_sha3', 'bisect', '_bisect', '_random', 'numpy.lib.utils', 'numpy.testing.nosetester', 'numpy.testing.nose_tools.nosetester', 'numpy.testing.utils', 'numpy.lib.ufunclike', 'numpy.lib.index_tricks', 'numpy.lib.function_base', 'numpy.lib.twodim_base', 'numpy.matrixlib', 'numpy.matrixlib.defmatrix', 'numpy.lib.stride_tricks', 'numpy.lib.mixins', 'numpy.lib.nanfunctions', 'numpy.lib.shape_base', 'numpy.lib.scimath', 'numpy.lib.polynomial', 'numpy.linalg', 'numpy.linalg.info', 'numpy.linalg.linalg', 'numpy.linalg.lapack_lite', 'numpy.linalg._umath_linalg', 'numpy.lib.arraysetops', 'numpy.lib.npyio', 'numpy.lib.format', 'numpy.lib._datasource', 'numpy.lib._iotools', 'numpy.lib.financial', 'decimal', '_decimal', 'numpy.lib.arrayterator', 'numpy.lib.arraypad', 'numpy.lib._version', 'numpy._distributor_init', 'numpy.fft', 'numpy.fft.info', 'numpy.fft.fftpack', 'numpy.fft.fftpack_lite', 'numpy.fft.helper', 'numpy.polynomial', 'numpy.polynomial.polynomial', 'numpy.polynomial.polyutils', 'numpy.polynomial._polybase', 'numpy.polynomial.chebyshev', 'numpy.polynomial.legendre', 'numpy.polynomial.hermite', 'numpy.polynomial.hermite_e', 'numpy.polynomial.laguerre', 'numpy.random', 'numpy.random.info', 'cython_runtime', 'mtrand', 'numpy.random.mtrand', 'numpy.ctypeslib', 'numpy.ma', 'numpy.ma.core', 'numpy.ma.extras', 'tables', 'tables.utilsextension', 'tables.description', 'tables.atom', 'inspect', 'dis', 'opcode', '_opcode', 'tables.utils', 'subprocess', '_posixsubprocess', 'select', 'selectors', 'tables.flavor', 'tables.exceptions', 'tables.misc', 'tables.misc.enum', 'six.moves', 'six.moves.cPickle', 'tables.path', 'tables._comp_lzo', 'tables._comp_bzip2', 'tables.filters', 'distutils', 'distutils.version', 'tables.req_versions', 'tables.file', 'numexpr', 'numexpr.__config__', 'platform', 'numexpr.expressions', 'numexpr.interpreter', 'numexpr.necompiler', 'numexpr.utils', 'numexpr.version', 'tables.hdf5extension', 'tables.parameters', 'tables.registry', 'tables.undoredo', 'tables.node', 'tables.attributeset', 'tables.group', 'tables.misc.proxydict', 'tables.leaf', 'tables.unimplemented', 'tables.link', 'tables.linkextension', 'tables.array', 'tables.carray', 'tables.earray', 'tables.vlarray', 'tables.table', 'tables.tableextension', 'tables.lrucacheextension', 'tables.conditions', 'tables.index', 'tables.idxutils', 'tables.indexesextension', 'tables.indexes', 'tables.expression', 'tables.tests', 'tables.tests.common', 'pkg_resources', 'zipfile', 'binascii', 'pkgutil', 'plistlib', 'xml', 'xml.parsers', 'xml.parsers.expat', 'pyexpat.errors', 'pyexpat.model', 'pyexpat', 'xml.parsers.expat.model', 'xml.parsers.expat.errors', 'email', 'email.parser', 'email.feedparser', 'email.errors', 'email._policybase', 'email.header', 'email.quoprimime', 'email.base64mime', 'base64', 'email.charset', 'email.encoders', 'quopri', 'email.utils', 'socket', '_socket', 'email._parseaddr', 'calendar', 'pkg_resources.extern', 'pkg_resources._vendor', 'pkg_resources.extern.six', 'pkg_resources._vendor.six', 'pkg_resources.extern.six.moves', 'pkg_resources._vendor.six.moves', 'pkg_resources.py31compat', 'pkg_resources.extern.appdirs', 'pkg_resources._vendor.packaging.__about__', 'pkg_resources.extern.packaging', 'pkg_resources.extern.packaging.version', 'pkg_resources.extern.packaging._structures', 'pkg_resources.extern.packaging.specifiers', 'pkg_resources.extern.packaging._compat', 'pkg_resources.extern.packaging.requirements', 'pkg_resources.extern.pyparsing', 'pkg_resources.extern.six.moves.urllib', 'pkg_resources.extern.packaging.markers', 'tables.tests.test_all', 'config', 'utils', 'utils.utils', 'nmt_keras', 'nmt_keras.training', 'timeit', 'gc', 'data_engine', 'data_engine.prepare_data', 'keras_wrapper.dataset', 'keras_wrapper.extra.tokenizers', 'keras_wrapper.utils', 'multiprocessing', 'multiprocessing.context', 'multiprocessing.process', 'multiprocessing.reduction', 'array', '__mp_main__', 'keras_wrapper.cnn_model', 'cloudpickle', 'cloudpickle.cloudpickle', 'matplotlib', 'urllib.request', 'http', 'http.client', 'email.message', 'uu', 'email._encoded_words', 'email.iterators', 'ssl', 'ipaddress', '_ssl', 'urllib.error', 'urllib.response', 'matplotlib.cbook', 'glob', 'gzip', 'matplotlib.cbook.deprecation', 'matplotlib.rcsetup', 'matplotlib.fontconfig_pattern', 'pyparsing', 'matplotlib.colors', 'matplotlib._color_data', 'cycler', 'matplotlib._version', 'dateutil', 'dateutil._version']
+Using TensorFlow backend.
+[26/04/2019 16:01:35] CACHEDIR=/home/s3243508/.cache/matplotlib
+[26/04/2019 16:01:35] Using fontManager instance from /home/s3243508/.cache/matplotlib/fontlist-v300.json
+[26/04/2019 16:01:37] Loaded backend agg version unknown.
+[26/04/2019 16:01:37] Running training.
+[26/04/2019 16:01:37] Building EuTrans_gronl dataset
+[26/04/2019 16:01:37] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:37] Creating vocabulary for data with data_id 'target_text'.
+[26/04/2019 16:01:37] 	 Total: 206 unique words in 6682 sentences with a total of 218278 words.
+[26/04/2019 16:01:37] Creating dictionary of all words
+[26/04/2019 16:01:37] Loaded "train" set outputs of data_type "text" with data_id "target_text" and length 6682.
+[26/04/2019 16:01:37] Loaded "train" set inputs of type "file-name" with id "raw_target_text".
+[26/04/2019 16:01:37] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:37] Loaded "val" set outputs of data_type "text" with data_id "target_text" and length 465.
+[26/04/2019 16:01:37] Loaded "val" set inputs of type "file-name" with id "raw_target_text".
+[26/04/2019 16:01:37] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:37] Loaded "test" set outputs of data_type "text" with data_id "target_text" and length 497.
+[26/04/2019 16:01:37] Loaded "test" set inputs of type "file-name" with id "raw_target_text".
+[26/04/2019 16:01:38] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:38] Creating vocabulary for data with data_id 'source_text'.
+[26/04/2019 16:01:38] 	 Total: 207 unique words in 6682 sentences with a total of 220815 words.
+[26/04/2019 16:01:38] Creating dictionary of all words
+[26/04/2019 16:01:38] Loaded "train" set inputs of data_type "text" with data_id "source_text" and length 6682.
+[26/04/2019 16:01:38] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:38] Creating vocabulary for data with data_id 'state_below'.
+[26/04/2019 16:01:38] 	 Total: 206 unique words in 6682 sentences with a total of 218278 words.
+[26/04/2019 16:01:38] Creating dictionary of all words
+[26/04/2019 16:01:38] Loaded "train" set inputs of data_type "text" with data_id "state_below" and length 6682.
+[26/04/2019 16:01:38] Loaded "train" set inputs of type "file-name" with id "raw_source_text".
+[26/04/2019 16:01:38] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:38] Loaded "val" set inputs of data_type "text" with data_id "source_text" and length 465.
+[26/04/2019 16:01:38] Loaded "val" set inputs of data_type "ghost" with data_id "state_below" and length 465.
+[26/04/2019 16:01:38] Loaded "val" set inputs of type "file-name" with id "raw_source_text".
+[26/04/2019 16:01:38] 	Applying tokenization function: "tokenize_none".
+[26/04/2019 16:01:38] Loaded "test" set inputs of data_type "text" with data_id "source_text" and length 497.
+[26/04/2019 16:01:38] Loaded "test" set inputs of data_type "ghost" with data_id "state_below" and length 497.
+[26/04/2019 16:01:38] Loaded "test" set inputs of type "file-name" with id "raw_source_text".
+[26/04/2019 16:01:38] Keeping 1 captions per input on the val set.
+[26/04/2019 16:01:38] Samples reduced to 465 in val set.
+[26/04/2019 16:01:38] <<< Saving Dataset instance to datasets//Dataset_EuTrans_gronl.pkl ... >>>
+[26/04/2019 16:01:38] <<< Dataset instance saved >>>
+[26/04/2019 16:01:38] <<< Building AttentionRNNEncoderDecoder Translation_Model >>>
+2019-04-26 16:01:49.140686: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1405] Found device 0 with properties: 
+name: Tesla K40m major: 3 minor: 5 memoryClockRate(GHz): 0.745
+pciBusID: 0000:03:00.0
+totalMemory: 11.17GiB freeMemory: 11.10GiB
+2019-04-26 16:01:49.267413: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1405] Found device 1 with properties: 
+name: Tesla K40m major: 3 minor: 5 memoryClockRate(GHz): 0.745
+pciBusID: 0000:82:00.0
+totalMemory: 11.17GiB freeMemory: 11.10GiB
+2019-04-26 16:01:49.267513: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1484] Adding visible gpu devices: 0, 1
+2019-04-26 16:01:50.116138: I tensorflow/core/common_runtime/gpu/gpu_device.cc:965] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-04-26 16:01:50.116234: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971]      0 1 
+2019-04-26 16:01:50.116256: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] 0:   N N 
+2019-04-26 16:01:50.116271: I tensorflow/core/common_runtime/gpu/gpu_device.cc:984] 1:   N N 
+2019-04-26 16:01:50.116717: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1097] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 10749 MB memory) -> physical GPU (device: 0, name: Tesla K40m, pci bus id: 0000:03:00.0, compute capability: 3.5)
+2019-04-26 16:01:50.117246: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1097] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:1 with 10749 MB memory) -> physical GPU (device: 1, name: Tesla K40m, pci bus id: 0000:82:00.0, compute capability: 3.5)
+2019-04-26 16:01:50.118581: I tensorflow/core/common_runtime/process_util.cc:69] Creating new thread pool with default inter op setting: 2. Tune using inter_op_parallelism_threads for best performance.
+-----------------------------------------------------------------------------------
+		TranslationModel instance
+-----------------------------------------------------------------------------------
+_model_type: AttentionRNNEncoderDecoder
+name: EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001
+model_path: trained_models/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/
+verbose: 1
+
+Params:
+	ACCUMULATE_GRADIENTS: 1
+	ADDITIONAL_OUTPUT_MERGE_MODE: Add
+	ALIGN_FROM_RAW: True
+	ALPHA_FACTOR: 0.6
+	AMSGRAD: False
+	APPLY_DETOKENIZATION: False
+	ATTENTION_DROPOUT_P: 0.0
+	ATTENTION_MODE: scaled-dot
+	ATTENTION_SIZE: 32
+	BATCH_NORMALIZATION_MODE: 1
+	BATCH_SIZE: 50
+	BEAM_SEARCH: True
+	BEAM_SIZE: 6
+	BETA_1: 0.9
+	BETA_2: 0.999
+	BIDIRECTIONAL_DEEP_ENCODER: True
+	BIDIRECTIONAL_ENCODER: True
+	BIDIRECTIONAL_MERGE_MODE: concat
+	BPE_CODES_PATH: examples/EuTrans//training_codes.joint
+	CLASSIFIER_ACTIVATION: softmax
+	CLIP_C: 5.0
+	CLIP_V: 0.0
+	COVERAGE_NORM_FACTOR: 0.2
+	COVERAGE_PENALTY: False
+	DATASET_NAME: EuTrans
+	DATASET_STORE_PATH: datasets/
+	DATA_AUGMENTATION: False
+	DATA_ROOT_PATH: examples/EuTrans/
+	DECODER_HIDDEN_SIZE: 32
+	DECODER_RNN_TYPE: ConditionalLSTM
+	DEEP_OUTPUT_LAYERS: [('linear', 32)]
+	DETOKENIZATION_METHOD: detokenize_none
+	DOUBLE_STOCHASTIC_ATTENTION_REG: 0.0
+	DROPOUT_P: 0.0
+	EARLY_STOP: True
+	EMBEDDINGS_FREQ: 1
+	EMBEDDINGS_LAYER_NAMES: ['source_word_embedding', 'target_word_embedding']
+	EMBEDDINGS_METADATA: None
+	ENCODER_HIDDEN_SIZE: 32
+	ENCODER_RNN_TYPE: LSTM
+	EPOCHS_FOR_SAVE: 1
+	EPSILON: 1e-07
+	EVAL_EACH: 1
+	EVAL_EACH_EPOCHS: True
+	EVAL_ON_SETS: ['val']
+	EVAL_ON_SETS_KERAS: []
+	EXTRA_NAME: 
+	FF_SIZE: 128
+	FILL: end
+	FORCE_RELOAD_VOCABULARY: False
+	GLOSSARY: None
+	HEURISTIC: 0
+	HOMOGENEOUS_BATCHES: False
+	INIT_ATT: glorot_uniform
+	INIT_FUNCTION: glorot_uniform
+	INIT_LAYERS: ['tanh']
+	INNER_INIT: orthogonal
+	INPUTS_IDS_DATASET: ['source_text', 'state_below']
+	INPUTS_IDS_MODEL: ['source_text', 'state_below']
+	INPUT_VOCABULARY_SIZE: 210
+	JOINT_BATCHES: 4
+	LABEL_SMOOTHING: 0.0
+	LABEL_WORD_EMBEDDINGS_WITH_VOCAB: True
+	LENGTH_NORM_FACTOR: 0.2
+	LENGTH_PENALTY: False
+	LOG_DIR: tensorboard_logs
+	LOSS: categorical_crossentropy
+	LR: 0.001
+	LR_DECAY: None
+	LR_GAMMA: 0.8
+	LR_HALF_LIFE: 100
+	LR_REDUCER_EXP_BASE: -0.5
+	LR_REDUCER_TYPE: exponential
+	LR_REDUCE_EACH_EPOCHS: False
+	LR_START_REDUCTION_ON_EPOCH: 0
+	MAPPING: examples/EuTrans//mapping.gro_nl.pkl
+	MAXLEN_GIVEN_X: True
+	MAXLEN_GIVEN_X_FACTOR: 2
+	MAX_EPOCH: 500
+	MAX_INPUT_TEXT_LEN: 300
+	MAX_OUTPUT_TEXT_LEN: 300
+	MAX_OUTPUT_TEXT_LEN_TEST: 900
+	METRICS: ['coco']
+	MINLEN_GIVEN_X: True
+	MINLEN_GIVEN_X_FACTOR: 3
+	MIN_OCCURRENCES_INPUT_VOCAB: 0
+	MIN_OCCURRENCES_OUTPUT_VOCAB: 0
+	MODE: training
+	MODEL_NAME: EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001
+	MODEL_SIZE: 32
+	MODEL_TYPE: AttentionRNNEncoderDecoder
+	MOMENTUM: 0.0
+	MULTIHEAD_ATTENTION_ACTIVATION: linear
+	NESTEROV_MOMENTUM: False
+	NOISE_AMOUNT: 0.01
+	NORMALIZE_SAMPLING: False
+	N_GPUS: 2
+	N_HEADS: 8
+	N_LAYERS_DECODER: 1
+	N_LAYERS_ENCODER: 1
+	N_SAMPLES: 5
+	OPTIMIZED_SEARCH: True
+	OPTIMIZER: Adam
+	OUTPUTS_IDS_DATASET: ['target_text']
+	OUTPUTS_IDS_MODEL: ['target_text']
+	OUTPUT_VOCABULARY_SIZE: 209
+	PAD_ON_BATCH: True
+	PARALLEL_LOADERS: 1
+	PATIENCE: 10
+	PLOT_EVALUATION: False
+	POS_UNK: True
+	REBUILD_DATASET: True
+	RECURRENT_DROPOUT_P: 0.0
+	RECURRENT_INPUT_DROPOUT_P: 0.0
+	RECURRENT_WEIGHT_DECAY: 0.0
+	REGULARIZATION_FN: L2
+	RELOAD: 0
+	RELOAD_EPOCH: True
+	RHO: 0.9
+	SAMPLE_EACH_UPDATES: 300
+	SAMPLE_ON_SETS: ['train', 'val']
+	SAMPLE_WEIGHTS: True
+	SAMPLING: max_likelihood
+	SAMPLING_SAVE_MODE: list
+	SAVE_EACH_EVALUATION: True
+	SCALE_SOURCE_WORD_EMBEDDINGS: False
+	SCALE_TARGET_WORD_EMBEDDINGS: False
+	SEARCH_PRUNING: False
+	SKIP_VECTORS_HIDDEN_SIZE: 32
+	SKIP_VECTORS_SHARED_ACTIVATION: tanh
+	SOURCE_TEXT_EMBEDDING_SIZE: 32
+	SRC_LAN: gro
+	SRC_PRETRAINED_VECTORS: None
+	SRC_PRETRAINED_VECTORS_TRAINABLE: True
+	START_EVAL_ON_EPOCH: 1
+	START_SAMPLING_ON_EPOCH: 1
+	STOP_METRIC: Bleu_4
+	STORE_PATH: trained_models/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/
+	TARGET_TEXT_EMBEDDING_SIZE: 32
+	TASK_NAME: EuTrans
+	TEMPERATURE: 1
+	TENSORBOARD: True
+	TEXT_FILES: {'train': 'training.', 'val': 'dev.', 'test': 'test.'}
+	TIE_EMBEDDINGS: False
+	TOKENIZATION_METHOD: tokenize_none
+	TOKENIZE_HYPOTHESES: True
+	TOKENIZE_REFERENCES: True
+	TRAINABLE_DECODER: True
+	TRAINABLE_ENCODER: True
+	TRAIN_ON_TRAINVAL: False
+	TRG_LAN: nl
+	TRG_PRETRAINED_VECTORS: None
+	TRG_PRETRAINED_VECTORS_TRAINABLE: True
+	USE_BATCH_NORMALIZATION: True
+	USE_CUDNN: True
+	USE_L1: False
+	USE_L2: False
+	USE_NOISE: False
+	USE_PRELU: False
+	USE_TF_OPTIMIZER: True
+	VERBOSE: 1
+	WARMUP_EXP: -1.5
+	WEIGHT_DECAY: 0.0001
+	WORD_EMBEDDINGS_LABELS: ['source_text', 'target_text']
+	WRITE_VALID_SAMPLES: True
+-----------------------------------------------------------------------------------
+Model: "model_1"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+source_text (InputLayer)        (None, None)         0                                            
+__________________________________________________________________________________________________
+source_word_embedding (Embeddin (None, None, 32)     6720        source_text[0][0]                
+__________________________________________________________________________________________________
+src_embedding_batch_normalizati (None, None, 32)     128         source_word_embedding[0][0]      
+__________________________________________________________________________________________________
+remove_mask_1 (RemoveMask)      (None, None, 32)     0           src_embedding_batch_normalization
+__________________________________________________________________________________________________
+bidirectional_encoder_LSTM (Bid (None, None, 64)     16896       remove_mask_1[0][0]              
+__________________________________________________________________________________________________
+annotations_batch_normalization (None, None, 64)     256         bidirectional_encoder_LSTM[0][0] 
+__________________________________________________________________________________________________
+source_text_mask (GetMask)      (None, None, 32)     0           src_embedding_batch_normalization
+__________________________________________________________________________________________________
+annotations (ApplyMask)         (None, None, 64)     0           annotations_batch_normalization[0
+                                                                 source_text_mask[0][0]           
+__________________________________________________________________________________________________
+state_below (InputLayer)        (None, None)         0                                            
+__________________________________________________________________________________________________
+ctx_mean (MaskedMean)           (None, 64)           0           annotations[0][0]                
+__________________________________________________________________________________________________
+target_word_embedding (Embeddin (None, None, 32)     6688        state_below[0][0]                
+__________________________________________________________________________________________________
+initial_state (Dense)           (None, 32)           2080        ctx_mean[0][0]                   
+__________________________________________________________________________________________________
+initial_memory (Dense)          (None, 32)           2080        ctx_mean[0][0]                   
+__________________________________________________________________________________________________
+state_below_batch_normalization (None, None, 32)     128         target_word_embedding[0][0]      
+__________________________________________________________________________________________________
+initial_state_batch_normalizati (None, 32)           128         initial_state[0][0]              
+__________________________________________________________________________________________________
+initial_memory_batch_normalizat (None, 32)           128         initial_memory[0][0]             
+__________________________________________________________________________________________________
+decoder_AttConditionalLSTMCond  [(None, None, 32), ( 23840       state_below_batch_normalization[0
+                                                                 annotations[0][0]                
+                                                                 initial_state_batch_normalization
+                                                                 initial_memory_batch_normalizatio
+__________________________________________________________________________________________________
+proj_h0_batch_normalization (Ba (None, None, 32)     128         decoder_AttConditionalLSTMCond[0]
+__________________________________________________________________________________________________
+logit_ctx (TimeDistributed)     (None, None, 32)     2080        decoder_AttConditionalLSTMCond[0]
+__________________________________________________________________________________________________
+logit_lstm (TimeDistributed)    (None, None, 32)     1056        proj_h0_batch_normalization[0][0]
+__________________________________________________________________________________________________
+permute_general_1 (PermuteGener (None, None, 32)     0           logit_ctx[0][0]                  
+__________________________________________________________________________________________________
+logit_emb (TimeDistributed)     (None, None, 32)     1056        state_below_batch_normalization[0
+__________________________________________________________________________________________________
+out_layer_mlp_batch_normalizati (None, None, 32)     128         logit_lstm[0][0]                 
+__________________________________________________________________________________________________
+out_layer_ctx_batch_normalizati (None, None, 32)     128         permute_general_1[0][0]          
+__________________________________________________________________________________________________
+out_layer_emb_batch_normalizati (None, None, 32)     128         logit_emb[0][0]                  
+__________________________________________________________________________________________________
+additional_input (Add)          (None, None, 32)     0           out_layer_mlp_batch_normalization
+                                                                 out_layer_ctx_batch_normalization
+                                                                 out_layer_emb_batch_normalization
+__________________________________________________________________________________________________
+activation_1 (Activation)       (None, None, 32)     0           additional_input[0][0]           
+__________________________________________________________________________________________________
+linear_0 (TimeDistributed)      (None, None, 32)     1056        activation_1[0][0]               
+__________________________________________________________________________________________________
+out_layer_linear_0_batch_normal (None, None, 32)     128         linear_0[0][0]                   
+__________________________________________________________________________________________________
+target_text (TimeDistributed)   (None, None, 209)    6897        out_layer_linear_0_batch_normaliz
+==================================================================================================
+Total params: 71,857
+Trainable params: 71,153
+Non-trainable params: 704
+__________________________________________________________________________________________________
+[26/04/2019 16:01:52] Preparing optimizer and compiling. Optimizer configuration: 
+	 LR: 0.001
+	 LOSS: categorical_crossentropy
+	 BETA_1: 0.9
+	 BETA_2: 0.999
+	 EPSILON: 1e-07
+[26/04/2019 16:01:52] Starting training!
+[26/04/2019 16:01:52] <<< Training model >>>
+[26/04/2019 16:01:52] Training parameters: { 
+	batch_size: 50
+	class_weights: None
+	da_enhance_list: []
+	da_patch_type: resize_and_rndcrop
+	data_augmentation: False
+	each_n_epochs: 1
+	epoch_offset: 0
+	epochs_for_save: 1
+	eval_on_epochs: True
+	eval_on_sets: []
+	extra_callbacks: [<keras_wrapper.extra.callbacks.EvalPerformance object at 0x7f29e4013860>, <keras_wrapper.extra.callbacks.Sample object at 0x7f29e4013748>]
+	homogeneous_batches: False
+	initial_lr: 0.001
+	joint_batches: 4
+	lr_decay: None
+	lr_gamma: 0.8
+	lr_half_life: 100
+	lr_reducer_exp_base: -0.5
+	lr_reducer_type: exponential
+	lr_warmup_exp: -1.5
+	maxlen: 300
+	mean_substraction: False
+	metric_check: Bleu_4
+	min_lr: 1e-09
+	n_epochs: 500
+	n_gpus: 2
+	n_parallel_loaders: 1
+	normalization_type: (-1)-1
+	normalize: True
+	num_iterations_val: None
+	patience: 10
+	patience_check_split: val
+	reduce_each_epochs: False
+	reload_epoch: 0
+	shuffle: True
+	start_eval_on_epoch: 1
+	start_reduction_on_epoch: 0
+	tensorboard: True
+	tensorboard_params: {'log_dir': 'tensorboard_logs', 'histogram_freq': 0, 'batch_size': 50, 'write_graph': True, 'write_grads': False, 'write_images': False, 'embeddings_freq': 1, 'embeddings_layer_names': ['source_word_embedding', 'target_word_embedding'], 'embeddings_metadata': None, 'label_word_embeddings_with_vocab': True, 'word_embeddings_labels': ['source_text', 'target_text']}
+	verbose: 1
+	wo_da_patch_type: whole
+}
+[26/04/2019 16:01:52] <<< creating directory trained_models/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001//tensorboard_logs ... >>>
+Epoch 1/500
+
+  1/134 [..............................] - ETA: 22:46 - loss: 22.4217
+  2/134 [..............................] - ETA: 12:06 - loss: 18.3060
+  3/134 [..............................] - ETA: 9:17 - loss: 23.5325 
+  4/134 [..............................] - ETA: 7:19 - loss: 21.7299
+  5/134 [>.............................] - ETA: 6:03 - loss: 19.9012
+  6/134 [>.............................] - ETA: 5:35 - loss: 22.8755
+  7/134 [>.............................] - ETA: 5:02 - loss: 22.3933
+  8/134 [>.............................] - ETA: 4:37 - loss: 21.9517
+  9/134 [=>............................] - ETA: 4:18 - loss: 22.5203
+ 10/134 [=>............................] - ETA: 3:59 - loss: 22.0055
+ 11/134 [=>............................] - ETA: 3:48 - loss: 22.2534
+ 12/134 [=>............................] - ETA: 3:33 - loss: 21.4585
+ 13/134 [=>............................] - ETA: 3:21 - loss: 20.9903
+ 14/134 [==>...........................] - ETA: 3:11 - loss: 20.8474
+ 15/134 [==>...........................] - ETA: 3:02 - loss: 20.3519
+ 16/134 [==>...........................] - ETA: 2:54 - loss: 20.1222
+ 17/134 [==>...........................] - ETA: 2:49 - loss: 20.1353
+ 18/134 [===>..........................] - ETA: 2:42 - loss: 19.9909
+ 19/134 [===>..........................] - ETA: 2:36 - loss: 19.6772
+ 20/134 [===>..........................] - ETA: 2:31 - loss: 19.5515
+ 21/134 [===>..........................] - ETA: 2:28 - loss: 19.7443
+ 22/134 [===>..........................] - ETA: 2:25 - loss: 19.8199
+ 23/134 [====>.........................] - ETA: 2:20 - loss: 19.4509
+ 24/134 [====>.........................] - ETA: 2:18 - loss: 19.7279
+ 25/134 [====>.........................] - ETA: 2:14 - loss: 19.5532
+ 26/134 [====>.........................] - ETA: 2:10 - loss: 19.2197
+ 27/134 [=====>........................] - ETA: 2:06 - loss: 19.0191
+ 28/134 [=====>........................] - ETA: 2:03 - loss: 18.7730
+ 29/134 [=====>........................] - ETA: 2:01 - loss: 18.6801
+ 30/134 [=====>........................] - ETA: 1:58 - loss: 18.5270
+ 31/134 [=====>........................] - ETA: 1:56 - loss: 18.5632
+ 32/134 [======>.......................] - ETA: 1:54 - loss: 18.4558
+ 33/134 [======>.......................] - ETA: 1:51 - loss: 18.3195
+ 34/134 [======>.......................] - ETA: 1:49 - loss: 18.1745
+ 35/134 [======>.......................] - ETA: 1:46 - loss: 18.0252
+ 36/134 [=======>......................] - ETA: 1:45 - loss: 17.9847
+ 37/134 [=======>......................] - ETA: 1:42 - loss: 17.8656
+ 38/134 [=======>......................] - ETA: 1:41 - loss: 17.8838
+ 39/134 [=======>......................] - ETA: 1:40 - loss: 17.9259
+ 40/134 [=======>......................] - ETA: 1:38 - loss: 17.8105
+ 41/134 [========>.....................] - ETA: 1:37 - loss: 17.8371
+ 42/134 [========>.....................] - ETA: 1:35 - loss: 17.7793
+ 43/134 [========>.....................] - ETA: 1:33 - loss: 17.6142
+ 44/134 [========>.....................] - ETA: 1:31 - loss: 17.6633
+ 45/134 [=========>....................] - ETA: 1:30 - loss: 17.5859
+ 46/134 [=========>....................] - ETA: 1:28 - loss: 17.4913
+ 47/134 [=========>....................] - ETA: 1:27 - loss: 17.6504
+ 48/134 [=========>....................] - ETA: 1:26 - loss: 17.6128
+ 49/134 [=========>....................] - ETA: 1:25 - loss: 17.5472
+ 50/134 [==========>...................] - ETA: 1:23 - loss: 17.4841
+ 51/134 [==========>...................] - ETA: 1:22 - loss: 17.4320
+ 52/134 [==========>...................] - ETA: 1:20 - loss: 17.3971
+ 53/134 [==========>...................] - ETA: 1:19 - loss: 17.3484
+ 54/134 [===========>..................] - ETA: 1:17 - loss: 17.3185
+ 55/134 [===========>..................] - ETA: 1:16 - loss: 17.2245
+ 56/134 [===========>..................] - ETA: 1:15 - loss: 17.2193
+ 57/134 [===========>..................] - ETA: 1:13 - loss: 17.1150
+ 58/134 [===========>..................] - ETA: 1:12 - loss: 17.0866
+ 59/134 [============>.................] - ETA: 1:11 - loss: 17.0414
+ 60/134 [============>.................] - ETA: 1:09 - loss: 16.9713
+ 61/134 [============>.................] - ETA: 1:08 - loss: 16.9263
+ 62/134 [============>.................] - ETA: 1:07 - loss: 16.8990
+ 63/134 [=============>................] - ETA: 1:06 - loss: 16.8136
+ 64/134 [=============>................] - ETA: 1:05 - loss: 16.8066
+ 65/134 [=============>................] - ETA: 1:03 - loss: 16.7683
+ 66/134 [=============>................] - ETA: 1:02 - loss: 16.6893
+ 67/134 [==============>...............] - ETA: 1:01 - loss: 16.6494
+ 68/134 [==============>...............] - ETA: 1:00 - loss: 16.5807
+ 69/134 [==============>...............] - ETA: 59s - loss: 16.5333 
+ 70/134 [==============>...............] - ETA: 57s - loss: 16.4710
+ 71/134 [==============>...............] - ETA: 56s - loss: 16.4517
+ 72/134 [===============>..............] - ETA: 55s - loss: 16.4538
+ 73/134 [===============>..............] - ETA: 54s - loss: 16.4102
+ 74/134 [===============>..............] - ETA: 54s - loss: 16.4034
+ 75/134 [===============>..............] - ETA: 52s - loss: 16.3416
+ 76/134 [================>.............] - ETA: 51s - loss: 16.3113
+ 77/134 [================>.............] - ETA: 50s - loss: 16.2716
+ 78/134 [================>.............] - ETA: 49s - loss: 16.2321
+ 79/134 [================>.............] - ETA: 48s - loss: 16.1767
+ 80/134 [================>.............] - ETA: 47s - loss: 16.1722
+ 81/134 [=================>............] - ETA: 46s - loss: 16.1342
+ 82/134 [=================>............] - ETA: 45s - loss: 16.1276
+ 83/134 [=================>............] - ETA: 44s - loss: 16.0982
+ 84/134 [=================>............] - ETA: 43s - loss: 16.1432
+ 85/134 [==================>...........] - ETA: 43s - loss: 16.1698
+ 86/134 [==================>...........] - ETA: 42s - loss: 16.1494
+ 87/134 [==================>...........] - ETA: 41s - loss: 16.1735
+ 88/134 [==================>...........] - ETA: 40s - loss: 16.1553
+ 89/134 [==================>...........] - ETA: 39s - loss: 16.1217
+ 90/134 [===================>..........] - ETA: 38s - loss: 16.1256
+ 91/134 [===================>..........] - ETA: 37s - loss: 16.0943
+ 92/134 [===================>..........] - ETA: 36s - loss: 16.0498
+ 93/134 [===================>..........] - ETA: 35s - loss: 16.0750
+ 94/134 [====================>.........] - ETA: 34s - loss: 16.0295
+ 95/134 [====================>.........] - ETA: 33s - loss: 15.9787
+ 96/134 [====================>.........] - ETA: 32s - loss: 15.9544
+ 97/134 [====================>.........] - ETA: 31s - loss: 15.9542
+ 98/134 [====================>.........] - ETA: 31s - loss: 15.9270
+ 99/134 [=====================>........] - ETA: 30s - loss: 15.8918
+100/134 [=====================>........] - ETA: 29s - loss: 15.8514
+101/134 [=====================>........] - ETA: 28s - loss: 15.8576
+102/134 [=====================>........] - ETA: 27s - loss: 15.8662
+103/134 [======================>.......] - ETA: 26s - loss: 15.8736
+104/134 [======================>.......] - ETA: 25s - loss: 15.8584
+105/134 [======================>.......] - ETA: 24s - loss: 15.8198
+106/134 [======================>.......] - ETA: 23s - loss: 15.7784
+107/134 [======================>.......] - ETA: 23s - loss: 15.7590
+108/134 [=======================>......] - ETA: 22s - loss: 15.7298
+109/134 [=======================>......] - ETA: 21s - loss: 15.7038
+110/134 [=======================>......] - ETA: 20s - loss: 15.7018
+111/134 [=======================>......] - ETA: 19s - loss: 15.6642
+112/134 [========================>.....] - ETA: 18s - loss: 15.6165
+113/134 [========================>.....] - ETA: 17s - loss: 15.6051
+114/134 [========================>.....] - ETA: 17s - loss: 15.6707
+115/134 [========================>.....] - ETA: 16s - loss: 15.6362
+116/134 [========================>.....] - ETA: 15s - loss: 15.6019
+117/134 [=========================>....] - ETA: 14s - loss: 15.5548
+118/134 [=========================>....] - ETA: 13s - loss: 15.5194
+119/134 [=========================>....] - ETA: 12s - loss: 15.4774
+120/134 [=========================>....] - ETA: 11s - loss: 15.4497
+121/134 [==========================>...] - ETA: 10s - loss: 15.4524
+122/134 [==========================>...] - ETA: 10s - loss: 15.4320
+123/134 [==========================>...] - ETA: 9s - loss: 15.4113 
+124/134 [==========================>...] - ETA: 8s - loss: 15.3733
+125/134 [==========================>...] - ETA: 7s - loss: 15.3611
+126/134 [===========================>..] - ETA: 6s - loss: 15.3343
+127/134 [===========================>..] - ETA: 5s - loss: 15.2838
+128/134 [===========================>..] - ETA: 5s - loss: 15.2496
+129/134 [===========================>..] - ETA: 4s - loss: 15.3098
+130/134 [============================>.] - ETA: 3s - loss: 15.2794
+131/134 [============================>.] - ETA: 2s - loss: 15.3319
+132/134 [============================>.] - ETA: 1s - loss: 15.2924
+133/134 [============================>.] - ETA: 0s - loss: 15.2790
+134/134 [==============================] - 112s 833ms/step - loss: 15.2373
+[26/04/2019 16:03:53] <<< Saving model to trained_models/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001//epoch_1 ... >>>
+[26/04/2019 16:03:55] <<< Model saved >>>
+
+[26/04/2019 16:03:55] <<< Predicting outputs of val set >>>
+
+
+Sampling 1/465  -  ETA: -1s 
+Traceback (most recent call last):
+  File "./main.py", line 49, in <module>
+    train_model(parameters, args.dataset)
+  File "/home/s3243508/nmt-keras-bpe-100-dutch/nmt_keras/training.py", line 159, in train_model
+    nmt_model.trainNet(dataset, training_params)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/cnn_model.py", line 916, in trainNet
+    self.__train(ds, params)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/cnn_model.py", line 1144, in __train
+    initial_epoch=params['epoch_offset'])
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras/keras/legacy/interfaces.py", line 91, in wrapper
+    return func(*args, **kwargs)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras/keras/engine/training.py", line 1504, in fit_generator
+    initial_epoch=initial_epoch)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras/keras/engine/training_generator.py", line 255, in fit_generator
+    callbacks.on_epoch_end(epoch, epoch_logs)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras/keras/callbacks.py", line 152, in on_epoch_end
+    callback.on_epoch_end(epoch, logs)
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/extra/callbacks.py", line 280, in on_epoch_end
+    self.evaluate(epoch, counter_name='epoch')
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/extra/callbacks.py", line 319, in evaluate
+    predictions_all = self.model_to_eval.predictBeamSearchNet(self.ds, params_prediction)[s]
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/cnn_model.py", line 1735, in predictBeamSearchNet
+    return_alphas=params['coverage_penalty'])
+  File "/home/s3243508/nmt-keras-char+-dutch/src/keras-wrapper/keras_wrapper/search.py", line 101, in beam_search
+    cand_scores = hyp_scores[:, None] - log_probs
+  File "cupy/core/core.pyx", line 1391, in cupy.core.core.ndarray.__sub__
+  File "cupy/core/_kernel.pyx", line 780, in cupy.core._kernel.ufunc.__call__
+  File "cupy/core/_kernel.pyx", line 74, in cupy.core._kernel._preprocess_args
+ValueError: Array device must be same as the current device: array device = 1 while current = 0
+
+
+###############################################################################
+Peregrine Cluster
+Job 5297279 for user 's3243508'
+Finished at: Fri Apr 26 16:03:59 CEST 2019
+
+Job details:
+============
+
+Name                : main
+User                : s3243508
+Partition           : gpu
+Nodes               : pg-gpu02
+Cores               : 12
+State               : FAILED
+Submit              : 2019-04-25T18:49:31
+Start               : 2019-04-26T16:01:16
+End                 : 2019-04-26T16:03:59
+Reserved walltime   : 20:00:00
+Used walltime       : 00:02:43
+Used CPU time       : 08:12:30 (efficiency: 1510.74%)
+% User (Computation): 90.12%
+% System (I/O)      :  9.88%
+Mem reserved        : 2000M/core
+Max Mem used        : 1.74G (pg-gpu02)
+Max Disk Write      : 30.72K (pg-gpu02)
+Max Disk Read       : 1.10M (pg-gpu02)
+
+
+Acknowledgements:
+=================
+
+Please see this page if you want to acknowledge Peregrine in your publications:
+
+https://redmine.hpc.rug.nl/redmine/projects/peregrine/wiki/ScientificOutput
+
+################################################################################
