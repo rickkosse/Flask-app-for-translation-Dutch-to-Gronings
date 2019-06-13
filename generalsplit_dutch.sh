@@ -1,0 +1,9 @@
+
+# subword-nmt learn-joint-bpe-and-vocab --input ./vocab_collection.nl ./vocab_collection.gro  -s 100 -o {codes_file} --write-vocabulary ./100/{vocab_file}.L1 ./100/{vocab_file}.L2
+
+# subword-nmt apply-bpe -c {codes_file} --vocabulary ./100/{vocab_file}.L1 --vocabulary-threshold 100 < ./100/training.gro > ./100/nmt/training.gro
+# subword-nmt apply-bpe -c {codes_file} --vocabulary ./100/{vocab_file}.L2 --vocabulary-threshold 100 < ./100/training.nl > ./100/nmt/training.nl
+
+subword-nmt apply-bpe -c {codes_file} --vocabulary ./100/{vocab_file}.L2 --vocabulary-threshold 100 < ./100/nmt/twenty_ted.nl > ./100/nmt/output_bpe_dutch.txt
+# subword-nmt apply-bpe -c {codes_file} --vocabulary ./100/{vocab_file}.L2 --vocabulary-threshold 100 < ./100/nmt/fourty_ted.nl > ./100/nmt/fourty_ted_bpe.nl
+# subword-nmt apply-bpe -c {codes_file} --vocabulary ./100/{vocab_file}.L2 --vocabulary-threshold 100 < ./100/dev.nl > ./100/nmt/dev.nl

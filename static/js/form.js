@@ -1,48 +1,51 @@
-// $("#click-button").on('switch', firstClick)
-
-// function firstClick() {
-// 	alert("First Clicked");
-// 	$("#click-button").off('switch').on('click', secondClick)
-// }
-
-// function secondClick() {
-// 	alert("Second Clicked");
-// 	$("#click-button").off('switch').on('click', firstClick)
-// }
-// var state = "nl-gro"
-// function state_1() {
-// 	if (state == "nl-gro") {
-// 		state = "gro-nl";
-// 	} else {
-// 		state = "nl-gro";
-// 	}
-// 	document.getElementById("demo").innerHTML = state;
-// 	// var myElement = $("demo")= state ; the Jquery variant
-
-// }
 
 var state = "nl-gro"
+var encoding = "BPE"
 
 $(document).ready(function(){
-  $(".toggle").click(function(){
-    if (state == "nl-gro") {
-        state = "gro-nl";
-      } else {
-        state = "nl-gro";
-      }
+	$(".toggle").click(function(){
+		if (state == "nl-gro") {
+			state = "gro-nl";
+		} else {
+			state = "nl-gro";
+		}
     // $(".status").html(state);
     console.log(state);
-  });
+});
+});
+
+
+
+$(document).ready(function(){
+	$("#chkToggle2").click(function(){
+		if (encoding == "BPE") {
+			encoding = "CHAR";
+		} else {
+			encoding = "BPE";
+		}
+    console.log(encoding);
+});
 });
 
 $(document).ready(function() {
 	$('form').on('submit', function(event) {
 		$.ajax({
 			data : {
-				name : $('#nameInput').val()			
+				name : $('#nameInput').val()		
 			},
 			type : 'POST',
-			url : '/predict_'+state
+			url : '/predict_'+encoding+"_"+state,
+			beforeSend: function() {
+				console.log('loading')
+				$('#successAlert').hide();
+				$('#errorAlert').hide();
+				$("#loadingDiv").show();
+			},
+			success: function(data) {
+				console.log('succes')
+				$("#loadingDiv").hide();
+				$('#successAlert').text(data.name).show();
+    }
 		})
 		.done(function(data) {
 
@@ -51,7 +54,6 @@ $(document).ready(function() {
 				$('#successAlert').hide();
 			}
 			else {
-				$('#successAlert').text(data.name).show();
 				$('#errorAlert').hide();
 			}
 
