@@ -9,11 +9,9 @@ $(document).ready(function(){
 		} else {
 			state = "nl-gro";
 		}
-    // $(".status").html(state);
-    console.log(state);
+		console.log(state);
+	});
 });
-});
-
 
 
 $(document).ready(function(){
@@ -23,8 +21,8 @@ $(document).ready(function(){
 		} else {
 			encoding = "BPE";
 		}
-    console.log(encoding);
-});
+		console.log(encoding);
+	});
 });
 
 $(document).ready(function() {
@@ -34,7 +32,7 @@ $(document).ready(function() {
 				name : $('#nameInput').val()		
 			},
 			type : 'POST',
-			url : '/predict_'+encoding+"_"+state,
+			url : '/predict_'+encoding+'_'+state,
 			beforeSend: function() {
 				console.log('loading')
 				$('#successAlert').hide();
@@ -45,7 +43,7 @@ $(document).ready(function() {
 				console.log('succes')
 				$("#loadingDiv").hide();
 				$('#successAlert').text(data.name).show();
-    }
+			}
 		})
 		.done(function(data) {
 
