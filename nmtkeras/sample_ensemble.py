@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# python3 ./sample_ensemble.py -m trained_models_char/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_17 -ds datasets/char/Dataset_EuTrans_nlgro.pkl  --config ./config_char.py   --text ../Output.txt
+
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import argparse
