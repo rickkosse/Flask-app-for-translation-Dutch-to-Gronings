@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
 from __future__ import print_function
 import sys
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/subword-nmt/subword_nmt")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100_dutch")
-# # sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/nmt_keras/src/keras-wrapper/keras-wrapper")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100/")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100/nmt_keras")
-# sys.path.remove("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100/src/keras-wrapper/keras-wrapper")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100_dutch/src/keras-wrapper/keras_wrapper/")
-# sys.path.append("/Users/rickkosse/Documents/RUG/flask_translation_env/nmt_keras_bpe_100_dutch/")
-
 from flask import Flask,render_template,url_for,request, jsonify, abort
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
-# from proces_and_convert_to_bpe import  restore_bpe
-
 import tensorflow as tf
 import sys
-import importlib.util
 import subprocess, pathlib
 from nmtkeras import pred_try
 from nmt_keras_bpe_100 import bpe_pred_try
@@ -34,8 +21,10 @@ app = Flask(__name__)
 Bootstrap(app)
 
 def init():
-    # load the pre-trained Keras model
-    global bpe_models, bpe_dataset, bpe_args, bpe_params, graph, char_models, char_dataset, char_args, char_params,bpe_models_NL, bpe_dataset_NL, bpe_args_NL, bpe_params_NL
+    # load the pre-trained Keras models
+    global bpe_models, bpe_dataset, bpe_args, bpe_params, graph, char_models, \
+            char_dataset, char_args, char_params,bpe_models_NL, bpe_dataset_NL, \
+            bpe_args_NL, bpe_params_NL
 
     char_models, char_dataset, char_args, char_params = pred_try.load_all()
 
@@ -44,7 +33,6 @@ def init():
     bpe_models_NL, bpe_dataset_NL, bpe_args_NL, bpe_params_NL = bpe_pred_try_nl.bpe_load_all_NL()
 
     graph = tf.get_default_graph()
-
 
 
 def bpe_get_predictions():
@@ -77,8 +65,7 @@ def bpe_NL_write_to_file(comments):
         text_NL_file.write(comments)
 
 
-"""Flask env below"""
-
+"""Flask env """
 @app.route('/')
 def home():
     return render_template('form.html')
@@ -86,16 +73,19 @@ def home():
 """Char NL"""
 @app.route('/predict_CHAR_nl-gro',methods=['POST'])
 def predict_predict_nl_gro():
-    print("received nl-gro")
+    # Validation
     if request.method == 'POST':
-        namequery = request.form['name']
-        processed = process(namequery)
+        translation_query = request.form['translation']
+        #Preprocess
+        processed = process(translation_query)
+        # Tokenize to Char
         char_encoding= convert_char(processed)
         create_file = write_to_file(char_encoding)
+        #Translate
         with graph.as_default():
             output = char_get_predictions()
+        # Detokenize and restore
         output_sen = restore(output)
-
         return jsonify({'name' : output})
     else:
         return abort(404)
@@ -103,18 +93,21 @@ def predict_predict_nl_gro():
 """Char gro nl"""
 @app.route('/predict_CHAR_gro-nl',methods=['POST'])
 def predict_gro_nl():
-    print("received gro-nl")
-
+    # Validation
     if request.method == 'POST':
-        namequery = request.form['name']
-        processed = process(namequery)
+        translation_query = request.form['translation']
+        #Preprocess
+        processed = process(translation_query)
+        # Tokenize to Char
         char_encoding= convert_char(processed)
         create_file = write_to_file(char_encoding)
+        #Translate
         with graph.as_default():
             output = char_get_predictions()
+        # Detokenize and restore
         output_sen = restore(output)
 
-        return jsonify({'name' : output})
+        return jsonify({'translation' : output})
 
     else:
         return abort(404)
@@ -122,21 +115,26 @@ def predict_gro_nl():
 """BPE NL GRO""" 
 @app.route('/predict_BPE_nl-gro',methods=['POST'])
 def predict_nl_gro_bpe():
-    if request.method == 'POST':
-        namequery = request.form['name']
-        print("request received",namequery)
-        processed = process(namequery)
+    # Validation
+    if request.method == 'POST': 
+        translation_query = request.form['translation']
+        #Preprocess
+        processed = process(translation_query)
         create_file = bpe_write_to_file(processed)
+        #Tokenize to BPE
         tokenize = subprocess.Popen('bash generalsplit.sh',shell=True,stdout=subprocess.PIPE ,stdin=subprocess.PIPE,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/")
-        time.sleep(0.4)
+        # Break to extend time for writing to files
+        time.sleep(0.5)
+        #Translate
         with graph.as_default():
             output = bpe_get_predictions()
+        # Detokenize and restore
         p = subprocess.Popen('bash restore.sh',shell=True,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/", stdout=subprocess.PIPE)
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
         output_sen = detokenized
 
-        return jsonify({'name' : output_sen})
+        return jsonify({'translation' : output_sen})
 
     else:
         return abort(404)
@@ -144,29 +142,32 @@ def predict_nl_gro_bpe():
 """BPE GRO NL""" 
 @app.route('/predict_BPE_gro-nl',methods=['POST'])
 def predict_gro_nl_bpe():
+    # Validation
     if request.method == 'POST':
-        print("received GRO-NL")
-        namequery = request.form['name']
-        print("request received",namequery)
-        processed = process(namequery)
+        translation_query = request.form['translation']
+        #Preprocess
+        processed = process(translation_query)
         create_file = bpe_NL_write_to_file(processed)
+        #Tokenize to BPE
         tokenize = subprocess.Popen('bash generalsplit_NL.sh',shell=True,stdout=subprocess.PIPE ,stdin=subprocess.PIPE,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/")
-        time.sleep(0.4)
+        # Break to extend time for writing to files
+        time.sleep(0.5)
+        #Translate
         with graph.as_default():
             output = bpe_NL_get_predictions()
+        # Detokenize and restore
         p = subprocess.Popen('bash restore_nl.sh',shell=True,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/", stdout=subprocess.PIPE)
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
         output_sen = detokenized
 
-        return jsonify({'name' : output_sen})
+        return jsonify({'translation' : output_sen})
 
     else:
         return abort(404)
 
-
 if __name__ == '__main__':
-    print(("* Loading Keras model and Flask starting server..."
-"please wait until server has fully started"))
+    print(("* Loading Keras model and Flask starting server..."\
+            "please wait until server has fully started"))
     init()
     app.run(debug=True)

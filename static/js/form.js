@@ -29,7 +29,7 @@ $(document).ready(function() {
 	$('form').on('submit', function(event) {
 		$.ajax({
 			data : {
-				name : $('#nameInput').val()		
+				translation : $('#trans_input').val()		
 			},
 			type : 'POST',
 			url : '/predict_'+encoding+'_'+state,
@@ -42,7 +42,7 @@ $(document).ready(function() {
 			success: function(data) {
 				console.log('succes')
 				$("#loadingDiv").hide();
-				$('#successAlert').text(data.name).show();
+				$('#successAlert').text(data.translation).show();
 			}
 		})
 		.done(function(data) {
@@ -62,22 +62,3 @@ $(document).ready(function() {
 	});
 
 });
-
-// $(document).ready(function() {
-// 	$('.toggle').click(function() {
-// 		var current_status = $('.status').text();
-// 		$.ajax({
-// 			url: "/get_toggled_status",
-// 			type: "get",
-// 			data: {status: current_status},
-// 			success: function(response) {
-// 				$(".status").html(response);
-// 				console.log(state);
-
-// 			},
-// 			error: function(xhr) {
-//       //Do Something to handle error
-//   }
-// });
-// 	});
-// });
