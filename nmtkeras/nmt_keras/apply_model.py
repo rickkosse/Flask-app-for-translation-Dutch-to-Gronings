@@ -6,12 +6,30 @@ except ImportError:
     pass
 import logging
 from keras_wrapper.extra.read_write import list2file, nbest2file, list2stdout, numpy2file, pkl2dict
-
+from keras_wrapper.cnn_model import loadModel
+from keras_wrapper.dataset import loadDataset
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
+def char_loading(args):
 
-def sample_ensemble(args, params):
+    logging.info("Using an ensemble of %d models" % len(args.models))
+    models = [loadModel(m, -1, full_path=True) for m in args.models]
+    dataset = loadDataset(args.dataset)
+
+    return models, dataset
+
+
+def bpe_loading(args):
+
+    logging.info("Using an ensemble of %d models" % len(args.models))
+    models = [loadModel(m, -1, full_path=True) for m in args.models]
+    dataset = loadDataset(args.dataset)
+
+    return models, dataset
+
+
+def sample_ensemble(args, params, models, dataset ):
     """
     Use several translation models for obtaining predictions from a source text file.
 
@@ -31,14 +49,10 @@ def sample_ensemble(args, params):
     """
     from data_engine.prepare_data import update_dataset_from_file
     from keras_wrapper.model_ensemble import BeamSearchEnsemble
-    from keras_wrapper.cnn_model import loadModel
-    from keras_wrapper.dataset import loadDataset
     from keras_wrapper.utils import decode_predictions_beam_search
 
-    logging.info("Using an ensemble of %d models" % len(args.models))
-    models = [loadModel(m, -1, full_path=True) for m in args.models]
-    dataset = loadDataset(args.dataset)
-    dataset = update_dataset_from_file(dataset, args.text, params, splits=args.splits, remove_outputs=True)
+
+    dataset = update_dataset_from_file(dataset, args.text, params, splits=args.splits, remove_outputs=False)
 
     params['INPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['INPUTS_IDS_DATASET'][0]]
     params['OUTPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['OUTPUTS_IDS_DATASET'][0]]
@@ -150,6 +164,8 @@ def sample_ensemble(args, params):
                 list2file(filepath, predictions)
                 if args.n_best:
                     nbest2file(filepath + '.nbest', n_best_predictions)
+                    return predictions
+
             else:
                 raise Exception('Only "list" is allowed in "SAMPLING_SAVE_MODE"')
         else:
@@ -157,6 +173,11 @@ def sample_ensemble(args, params):
             if args.n_best:
                 logging.info('Storing n-best sentences in ./' + s + '.nbest')
                 nbest2file('./' + s + '.nbest', n_best_predictions)
+                return n_best_predictions
+            else:
+                print("Via deze weg")
+                return predictions
+
         logging.info('Sampling finished')
 
 
@@ -243,4 +264,4 @@ def score_corpus(args, params):
             else:
                 raise Exception('The sampling mode ' + params['SAMPLING_SAVE_MODE'] + ' is not currently supported.')
         else:
-            print (scores)
+            print(scores)

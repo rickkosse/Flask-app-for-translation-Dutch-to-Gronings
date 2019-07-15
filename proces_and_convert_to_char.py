@@ -7,7 +7,9 @@ import string
 def restore(sent_list):
 
 	words = [w.replace(' ', '') for w in sent_list]
+	print(words)
 	words_out = ["".join(w.replace('***', ' ')) for w in words]
+	print(words_out)
 	return ''.join(words_out)
 
 def qoute_detector(sentence):

@@ -23,4 +23,3 @@ pytest-pep8
 pytest-xdist
 sacremoses
 scipy
-theano

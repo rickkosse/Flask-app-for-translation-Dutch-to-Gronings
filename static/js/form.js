@@ -43,6 +43,7 @@ $(document).ready(function() {
 				console.log('succes')
 				$("#loadingDiv").hide();
 				$('#successAlert').text(data.translation).show();
+				console.log(data.translation);
 			}
 		})
 		.done(function(data) {

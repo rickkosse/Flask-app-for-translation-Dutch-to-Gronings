@@ -107,13 +107,13 @@ def load_parameters():
                                                   # otherwise it will be truncated to these most frequent words.
     MIN_OCCURRENCES_INPUT_VOCAB = 0               # Minimum number of occurrences allowed for the words in the input vocabulary.
                                                   # Set to 0 for using them all.
-    MAX_INPUT_TEXT_LEN = 50                       # Maximum length of the input sequence.
+    MAX_INPUT_TEXT_LEN = 300                       # Maximum length of the input sequence.
 
     # Output text parameters
     OUTPUT_VOCABULARY_SIZE = 0                    # Size of the input vocabulary. Set to 0 for using all,
                                                   # otherwise it will be truncated to these most frequent words.
     MIN_OCCURRENCES_OUTPUT_VOCAB = 0              # Minimum number of occurrences allowed for the words in the output vocabulary.
-    MAX_OUTPUT_TEXT_LEN = 50                      # Maximum length of the output sequence.
+    MAX_OUTPUT_TEXT_LEN = 300                      # Maximum length of the output sequence.
                                                   # set to 0 if we want to use the whole answer as a single class.
     MAX_OUTPUT_TEXT_LEN_TEST = MAX_OUTPUT_TEXT_LEN * 3  # Maximum length of the output sequence during test time.
 
@@ -156,7 +156,7 @@ def load_parameters():
     # Training parameters
     MAX_EPOCH = 500                               # Stop when computed this number of epochs.
     BATCH_SIZE = 50                               # Size of each minibatch.
-    N_GPUS = 1                                    # Number of GPUs to use. Only for Tensorflow backend. Each GPU will receive mini-batches of BATCH_SIZE / N_GPUS.
+    N_GPUS = 0                                    # Number of GPUs to use. Only for Tensorflow backend. Each GPU will receive mini-batches of BATCH_SIZE / N_GPUS.
 
     HOMOGENEOUS_BATCHES = False                   # Use batches with homogeneous output lengths (Dangerous!!).
     JOINT_BATCHES = 4                             # When using homogeneous batches, get this number of batches to sort.
