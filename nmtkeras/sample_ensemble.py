@@ -26,51 +26,114 @@ def loadmodel(encoding, args):
     return model, dataset
 
 
-def parse_args_char():
-    parser = argparse.ArgumentParser("Use several translation models for obtaining predictions from a source text file.")
-    parser.add_argument("-ds", "--dataset", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/char/Dataset_EuTrans_nlgro.pkl", help="Dataset instance with data")
-    parser.add_argument("-t", "--text", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/Output.txt", help="Text file with source sentences")
-    parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
-                                                                                           "Should be already included"
-                                                                                           "into the dataset object.")
-    parser.add_argument("-d", "--dest", required=False, help="File to save translations in. If not specified, "
-                                                             "translations are outputted in STDOUT.")
-    parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
-    parser.add_argument("-c", "--config", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/char_config.pkl" ,help="Config pkl for loading the model configuration. "
-                                                               "If not specified, hyperparameters "
-                                                               "are read from config.py")
-    parser.add_argument("-n", "--n-best", action="store_true", default=False, help="Write n-best list (n = beam size)")
-    parser.add_argument("-w", "--weights", nargs="*", help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
-                                                           "By default, it applies the same weight to each model (1/N).", default=[])
-    parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
-    parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_char/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_14"],help="Path to the models")
-    parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
-                        default="")
-    return parser.parse_args()
+def parse_args_char(direction):
+    if direction =="NL_GRO":
+        parser = argparse.ArgumentParser("Use several translation models for obtaining predictions from a source text file.")
+        parser.add_argument("-ds", "--dataset", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/char/Dataset_EuTrans_nlgro.pkl", help="Dataset instance with data")
+        parser.add_argument("-t", "--text", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/Output.txt", help="Text file with source sentences")
+        parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
+                                                                                               "Should be already included"
+                                                                                               "into the dataset object.")
+        parser.add_argument("-d", "--dest", required=False, help="File to save translations in. If not specified, "
+                                                                 "translations are outputted in STDOUT.")
+        parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
+        parser.add_argument("-c", "--config", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/char_config.pkl" ,help="Config pkl for loading the model configuration. "
+                                                                   "If not specified, hyperparameters "
+                                                                   "are read from config.py")
+        parser.add_argument("-n", "--n-best", action="store_true", default=False, help="Write n-best list (n = beam size)")
+        parser.add_argument("-w", "--weights", nargs="*", help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
+                                                               "By default, it applies the same weight to each model (1/N).", default=[])
+        parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
+        parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_char/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_66"],help="Path to the models")
+        parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
+                            default="")
+        return parser.parse_args()
+
+    else:
+        parser = argparse.ArgumentParser(
+            "Use several translation models for obtaining predictions from a source text file.")
+        parser.add_argument("-ds", "--dataset", required=False,
+                            default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/char/Dataset_EuTrans_gronl.pkl",
+                            help="Dataset instance with data")
+        parser.add_argument("-t", "--text", required=False,
+                            default="/Users/rickkosse/Documents/RUG/flask_translation_env/Output_NL.txt",
+                            help="Text file with source sentences")
+        parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
+                                                                                               "Should be already included"
+                                                                                               "into the dataset object.")
+        parser.add_argument("-d", "--dest", required=False, help="File to save translations in. If not specified, "
+                                                                 "translations are outputted in STDOUT.")
+        parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
+        parser.add_argument("-c", "--config", required=False,
+                            default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/char_config_nl.pkl",
+                            help="Config pkl for loading the model configuration. "
+                                 "If not specified, hyperparameters "
+                                 "are read from config.py")
+        parser.add_argument("-n", "--n-best", action="store_true", default=False, help="Write n-best list (n = beam size)")
+        parser.add_argument("-w", "--weights", nargs="*",
+                            help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
+                                 "By default, it applies the same weight to each model (1/N).", default=[])
+        parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
+        parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_char/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_22"], help="Path to the models")
+        parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
+                            default="")
+        return parser.parse_args()
 
 
 
-def parse_args_bpe():
-    parser = argparse.ArgumentParser("Use several translation models for obtaining predictions from a source text file.")
-    parser.add_argument("-ds", "--dataset", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/bpe/Dataset_EuTrans_nlgro.pkl", help="Dataset instance with data")
-    parser.add_argument("-t", "--text", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/trans.txt", help="Text file with source sentences")
-    parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
-                                                                                           "Should be already included"
-                                                                                           "into the dataset object.")
-    parser.add_argument("-d", "--dest", required=False, help="File to save translations in. If not specified, "
-                                                             "translations are outputted in STDOUT.")
-    parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
-    parser.add_argument("-c", "--config", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/bpe_config.pkl", help="Config pkl for loading the model configuration. "
-                                                               "If not specified, hyperparameters "
-                                                               "are read from config.py")
-    parser.add_argument("-n", "--n-best", action="store_true", default=False, help="Write n-best list (n = beam size)")
-    parser.add_argument("-w", "--weights", nargs="*", help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
-                                                           "By default, it applies the same weight to each model (1/N).", default=[])
-    parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
-    parser.add_argument("-m", "--models", nargs="+", required=False,default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_bpe/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_8"],  help="Path to the models")
-    parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
-                        default="")
-    return parser.parse_args()
+def parse_args_bpe(direction):
+    if direction == "NL_GRO":
+        parser = argparse.ArgumentParser("Use several translation models for obtaining predictions from a source text file.")
+        parser.add_argument("-ds", "--dataset", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/bpe/Dataset_EuTrans_nlgro.pkl", help="Dataset instance with data")
+        parser.add_argument("-t", "--text", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/output_bpe_encoded.txt", help="Text file with source sentences")
+        parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
+                                                                                               "Should be already included"
+                                                                                               "into the dataset object.")
+        parser.add_argument("-d", "--dest", default="./output_bpe_encoded_translated.txt",  help="File to save translations in. If not specified, "
+                                                                 "translations are outputted in STDOUT.")
+        parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
+        parser.add_argument("-c", "--config", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/bpe_config.pkl", help="Config pkl for loading the model configuration. "
+                                                                   "If not specified, hyperparameters "
+                                                                   "are read from config.py")
+        parser.add_argument("-n", "--n-best", action="store_true", default=False, help="Write n-best list (n = beam size)")
+        parser.add_argument("-w", "--weights", nargs="*", help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
+                                                               "By default, it applies the same weight to each model (1/N).", default=[])
+        parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
+        parser.add_argument("-m", "--models", nargs="+", required=False,default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_bpe/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_43"],  help="Path to the models")
+        parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
+                            default="")
+        return parser.parse_args()
+    else:
+        parser = argparse.ArgumentParser(
+            "Use several translation models for obtaining predictions from a source text file.")
+        parser.add_argument("-ds", "--dataset", required=False, default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/datasets/bpe/Dataset_EuTrans_gronl.pkl",
+                            help="Dataset instance with data")
+        parser.add_argument("-t", "--text", required=False,
+                            default="/Users/rickkosse/Documents/RUG/flask_translation_env/output_bpe_nl_encoded.txt",
+                            help="Text file with source sentences")
+        parser.add_argument("-s", "--splits", nargs='+', required=False, default=['val'], help="Splits to sample. "
+                                                                                               "Should be already included"
+                                                                                               "into the dataset object.")
+        parser.add_argument("-d", "--dest", default="./output_bpe_encoded_translated_NL.txt",
+                            help="File to save translations in. If not specified, "
+                                 "translations are outputted in STDOUT.")
+        parser.add_argument("-v", "--verbose", required=False, default=0, type=int, help="Verbosity level")
+        parser.add_argument("-c", "--config", required=False,
+                            default="/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/bpe_config_nl.pkl",
+                            help="Config pkl for loading the model configuration. "
+                                 "If not specified, hyperparameters "
+                                 "are read from config.py")
+        parser.add_argument("-n", "--n-best", action="store_true", default=False,
+                            help="Write n-best list (n = beam size)")
+        parser.add_argument("-w", "--weights", nargs="*",
+                            help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
+                                 "By default, it applies the same weight to each model (1/N).", default=[])
+        parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
+        parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_bpe/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_35"],
+                            help="Path to the models")
+        parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
+                            default="")
+        return parser.parse_args()
 
 def predict(args, params, models, dataset):
 
@@ -78,11 +141,11 @@ def predict(args, params, models, dataset):
 
     return result
 
-def load_in(encoding):
+def load_in(encoding, direction):
     if encoding == "char":
-        args = parse_args_char()
+        args = parse_args_char(direction)
     else:
-        args = parse_args_bpe()
+        args = parse_args_bpe(direction)
     if args.config is None:
         logging.info("Reading parameters from config.py")
         from config import load_parameters

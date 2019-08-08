@@ -1,1 +1,1 @@
-cat trans_nl.txt | gsed -r 's/(@@ )|(@@ ?$)//g'
+cat output_bpe_encoded_translated_NL.txt | gsed -r 's/(@@ )|(@@ ?$)//g'
