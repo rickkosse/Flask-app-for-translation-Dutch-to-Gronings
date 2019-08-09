@@ -129,7 +129,7 @@ def parse_args_bpe(direction):
                             help="Weight given to each model in the ensemble. You should provide the same number of weights than models."
                                  "By default, it applies the same weight to each model (1/N).", default=[])
         parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
-        parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_bpe/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_35"],
+        parser.add_argument("-m", "--models", nargs="+", required=False, default=["/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras/trained_models_bpe/EuTrans_gronl_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_17"],
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
