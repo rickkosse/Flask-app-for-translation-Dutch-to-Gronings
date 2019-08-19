@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import print_function
 import sys
-sys.path.append('/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras')
-from flask import Flask,render_template,url_for,request, jsonify, abort
+import os
+sys.path.append(os.getcwd()+'/nmtkeras')
+print(os.getcwd())
+# sys.path.append('/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras')
+from flask import Flask,render_template,request, jsonify, abort
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
-# import sys
-import subprocess, pathlib
-# from nmtkeras import pred_try
-# from nmt_keras_bpe_100 import bpe_pred_try
-# import re
-# import os
-# from subtokenizer import SubTokenizer
+import subprocess
 import time
-# from nmt_keras_bpe_100_dutch import bpe_pred_try_nl
 from nmtkeras import sample_ensemble
 
 # initialize the Flask application and the Keras model
