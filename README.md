@@ -1,7 +1,6 @@
 # Flask-app-for-translation-Dutch-to-Gronings
-An flask environment for a translation app Dutch-Gronings
+An flask environment for the translation app Dutch-Gronings build on the Keras-nmt of [Álvaro Peris](https://github.com/lvapeab/nmt-keras)
 
-A Flask translation app.
 
 ## Install
 ```
