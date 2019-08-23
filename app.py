@@ -2,6 +2,14 @@
 from __future__ import print_function
 import sys
 import os
+<<<<<<< HEAD
+sys.path.append(os.getcwd()+"/nmtkeras/nmt_keras")
+from flask import Flask,render_template,url_for,request, jsonify, abort
+from flask_bootstrap import Bootstrap
+from proces_and_convert_to_char import process, convert_char, restore
+import tensorflow as tf
+import subprocess, pathlib
+=======
 sys.path.append(os.getcwd()+'/nmtkeras')
 print(os.getcwd())
 # sys.path.append('/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras')
@@ -10,6 +18,7 @@ from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
 import subprocess
+>>>>>>> temp-branch
 import time
 from nmtkeras import sample_ensemble
 
@@ -119,15 +128,15 @@ def predict_nl_gro_bpe():
         processed = process(translation_query)
         create_file = bpe_write_to_file(processed)
         #Tokenize to BPE
-        tokenize = subprocess.Popen('bash generalsplit.sh',shell=True,stdout=subprocess.PIPE ,stdin=subprocess.PIPE,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/")
+        tokenize = subprocess.Popen('bash generalsplit.sh',shell=True,stdout=subprocess.PIPE ,stdin=subprocess.PIPE,cwd=os.getcwd())
         # Break to extend time for writing to files
-        # time.sleep(0.5)
+        time.sleep(0.5)
         #Translate
         with graph.as_default():
             output = get_predictions(bpe_args, bpe_params, bpe_models, bpe_dataset)
         # Detokenize and restore
         print("translated",output)
-        p = subprocess.Popen('bash restore.sh',shell=True,cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/", stdout=subprocess.PIPE)
+        p = subprocess.Popen('bash restore.sh',shell=True,cwd=os.getcwd(), stdout=subprocess.PIPE)
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
         output_sen = detokenized
