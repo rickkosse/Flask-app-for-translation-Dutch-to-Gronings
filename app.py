@@ -2,14 +2,12 @@
 from __future__ import print_function
 import sys
 import os
-<<<<<<< HEAD
 sys.path.append(os.getcwd()+"/nmtkeras/nmt_keras")
 from flask import Flask,render_template,url_for,request, jsonify, abort
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
 import subprocess, pathlib
-=======
 sys.path.append(os.getcwd()+'/nmtkeras')
 print(os.getcwd())
 # sys.path.append('/Users/rickkosse/Documents/RUG/flask_translation_env/nmtkeras')
@@ -18,7 +16,6 @@ from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
 import subprocess
->>>>>>> temp-branch
 import time
 from nmtkeras import sample_ensemble
 
