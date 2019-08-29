@@ -5,7 +5,7 @@ An flask environment for the translation app Dutch-Gronings build on the Keras-n
 ## Install
 ```
 git clone https://github.com/rickirini/Flask-app-for-translation-Dutch-to-Gronings.git
-cd Flask-app-for-translation-Dutch-to-Gronings
+cd Flask-app-for-translation-Dutch-to-Gronings/nmtkeras
 pip install -r requirements.txt
 ```
 ## Usage
