@@ -1,0 +1,55 @@
+{% extends "form.html" %}
+{% block content %}
+    <div class="card-body">
+        <div class="d-flex justify-content-center">
+            <!-- Switch -->
+            <div class="switch">
+                <label>
+                    BPE
+                    <input type="checkbox" id="chkToggle2">
+                    <span class="lever"></span>
+                    Char
+                </label>
+                <br>
+                <div class="form-group mx-sm-3 mb-2">
+                    <input class='col-1 text-truncate text-center start' type="checkbox"
+                           data-on="NL-Gro"
+                           data-off="Gro-NL" checked data-toggle="toggle" data-onstyle="primary"
+                           data-offstyle="secondary">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="sr-only" for="trans_input"></label>
+                    <textarea class="form-control z-depth-2" id="trans_input" rows="5"
+                              placeholder="Schrief hier moar..." required></textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="inputPassword4"></label>
+                    <div class="preloader-wrapper small active" id="loadingDiv" style="display:none;">
+                        <div class="spinner-layer spinner-blue-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="gap-patch">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
+                         style="display:none;"></div>
+                    <div id="errorAlert" class="alert alert-danger mb-0" role="alert"
+                         style="display:none;"></div>
+                </div>
+            </div>
+            <form id="translate_form" class="form-inline row justify-content">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
