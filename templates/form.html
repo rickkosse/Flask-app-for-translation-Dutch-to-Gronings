@@ -3,80 +3,54 @@
 <head>
 
 
-  <title>Vertoal'n</title>
+    <title>Vertoal'n</title>
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
 </head>
 <body>
-  <div class="container">
+{#<div class="p-3 mb-2 bg-success"></div>#}
+{#<div style="background-color: #007700; height: 200px; width: 100%"></div>#}
+
+<div class="container">
     <div class="card">
-      <div class="card-header" >
-        Rick Kosse
-      </div>
-      <div class="card-body">  
-        <div class="d-flex justify-content-center">
-          <!-- Switch -->
-          <div class="switch">
-            <label>
-              BPE
-              <input type="checkbox" id="chkToggle2">
-              <span class="lever"></span>
-              Char
-            </label>
-            <br>
-            <div class="form-group mx-sm-3 mb-2">
-              <input class='col-1 text-truncate text-center start'  type="checkbox" data-on="NL-Gro" data-off="Gro-NL" checked data-toggle="toggle" data-onstyle="primary" data-offstyle="secondary">
-            </div>
-          </div>
+        <div class="card-header">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('home') }}">Vertalen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('display_sent') }}">Mee helpen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Valideren</a>
+                </li>
+
+            </ul>
+            {% block content %}{% endblock %}
         </div>
-        <div class="card-body">
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label class="sr-only" for="trans_input"></label>
-              <textarea class="form-control z-depth-2" id="trans_input" rows="5" placeholder="Write something here..." required></textarea>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="inputPassword4"></label>
-              <div class="preloader-wrapper small active" id="loadingDiv" style="display:none;">
-                <div class="spinner-layer spinner-blue-only">
-                  <div class="circle-clipper left">
-                    <div class="circle"></div>
-                  </div>
-                  <div class="gap-patch">
-                    <div class="circle"></div>
-                  </div>
-                  <div class="circle-clipper right">
-                    <div class="circle"></div>
-                  </div>
-                </div>
-              </div>
-              <div id="successAlert" class="alert alert-secondary mb-0" role="alert" style="display:none;"></div>
-              <div id="errorAlert" class="alert alert-danger mb-0" role="alert" style="display:none;"></div>
-            </div>
-          </div>
-          <form class="form-inline row justify-content">
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
     </div>
-  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-
-  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-  
-  <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
 
 </body>
 </html>
