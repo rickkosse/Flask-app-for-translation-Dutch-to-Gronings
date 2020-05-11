@@ -22,15 +22,14 @@
         <div class="card-header">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('home') }}">Vertalen</a>
+                    <a class="nav-link active"  href="{{ url_for('home') }}">Vertalen</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('display_sent') }}">Mee helpen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Valideren</a>
+                    <a class="nav-link"  href="{{ url_for('display_validation') }}">Valideren</a>
                 </li>
-
             </ul>
             {% block content %}{% endblock %}
         </div>
