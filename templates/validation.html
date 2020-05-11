@@ -1,0 +1,63 @@
+{% extends "form.html" %}
+{% block content %}
+    <meta id="my-validation" data-id="{% if all is defined and all %} {{ all[count][0] }} {% endif %}">
+    <div class="card-body">
+        <div class='validation_display'>
+            <div class="card-body">
+                <div class="form-row">
+                 <div class="form-group col-md-6">
+                        <form action="#">
+                                                    {% if all is defined and all %}
+                            <p>
+                            <label>
+
+                                <input type="checkbox"/>
+                                <span src="{{ all[count][1] }}"
+                                      id='validation_display'>{{ all[count][1] }}</span>
+                                {% else %}
+                        <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
+                    {% endif %}
+                    </label>
+                    </p>
+                    </form>
+                 </div>
+                  <div class="form-group col-md-6">
+                    <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
+                         style="display:inline-block;">
+                        {% if all is defined and all %}
+
+                            <p src="{{ all[count][2]  }}"
+                               id='validation_display'>{{ all[count][2]  }}</p>
+                        {% else %}
+                            <p id='validation_display'> Helaas! Geen zinnen meer in de database</p>
+                        {% endif %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <form id="help_translating_form">
+                            <button type="submit" class="btn btn-secondary"
+                                    {% if not all %}disabled{% endif %}>
+                                Verstuur
+                            </button>
+                        </form>
+                    </div>
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <div class='forward'>
+                            <button id='go_forward' class='navigate btn btn-primary'
+                                    {% if not all %}disabled{% endif %}>Volgende
+                            </button>
+                        </div>
+                    </div>
+                    <div class="btn-group mr-2" role="group" aria-label="Second group">
+
+                        <div class='back'></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
