@@ -5,14 +5,16 @@ import os
 
 sys.path.append(os.getcwd() + "/nmtkeras/nmt_keras")
 sys.path.append(os.getcwd() + '/nmtkeras')
-from flask import Flask, render_template, request, jsonify, abort, session
+from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for
 from flask_bootstrap import Bootstrap
 from proces_and_convert_to_char import process, convert_char, restore
 import tensorflow as tf
 import subprocess
 import time
 from nmtkeras import sample_ensemble
-from mongo_db import get_annotation, get_all_annotation
+from mongo_db import get_annotation, get_all_annotation, store_anno_in_mongo, get_all_validations
+import json
+from _collections import defaultdict
 
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
@@ -75,34 +77,119 @@ def home():
     return render_template('vertaal.html')
 
 
-# @app.route('/help')
-# def helper_page():
-#     gronings_list = get_annotation()
-#     if gronings_list:
-#         return render_template('help.html', gronings_list=gronings_list)
-#     else:
-#         gronings_list = ["Geen zinnen meer in de database"]
-#         return render_template('help.html', gronings_list=gronings_list)
-
-
 @app.route('/help', methods=['GET'])
 def display_sent():
-    '''function to return the HTML page to display the sentence'''
+    """function to return the HTML page to display the sentence"""
     session['count'] = 0
-    _files = get_all_annotation()
-    print(_files)
-    print(len(_files))
-    return render_template('help.html', sentence = _files[0])
+    files = get_all_annotation()
+    print("Begin pagina")
+
+    if "read_items" in session:
+        read_items = session.get('read_items', None)
+        session['read_items'] = read_items
+        session["all"] = [(str(instance._id), instance.orginal_gronings) for instance in files if
+                          str(instance._id) not in session["read_items"]]
+        all = session["all"]
+
+    else:
+        all = [(str(instance._id), instance.orginal_gronings) for instance in files]
+        session["all"] = all
+
+    return render_template('help.html', all=all, count=session['count'])
 
 
 @app.route('/get_anno', methods=['GET'])
 def get_anno():
     _direction = request.args.get('direction')
+    count = session.get('count', None)
+    session['count'] = count
     session['count'] = session['count'] + (1 if _direction == 'f' else - 1)
-    _files = get_all_annotation()
+    files = get_all_annotation()
+    if 'read_items' in session:
+
+        print("read in anno", session['read_items'])
+        read_items = session.get('read_items', None)
+        session['read_items'] = read_items
+        session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files if
+                          str(instance._id) not in session['read_items']]
+    else:
+        print("creating session")
+        session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files]
+
+        return jsonify(
+            {'forward': str(session['count'] + 1 < len(session["all"])),
+             'back': str(bool(session['count'])), "count": session['count'], "all": session['all']})
+
+
+@app.route('/store_in_mongo', methods=['POST'])
+def store_in_mongo():
+    if request.method == 'POST':
+        anno = request.form['annotation']
+        original_id = request.form['original_id']
+        storing = store_anno_in_mongo(anno, original_id)
+        if "read_items" in session:
+            read_items = session.get('read_items', None)
+            read_items.append(original_id)
+            session['read_items'] = read_items
+        else:
+            session['read_items'] = [original_id]
+
+        if "all" in session:
+            all_items = session.get('all', None)
+            session['all'] = [i for i in all_items if i[0] not in session['read_items']]
+        count = session.get('count', None)
+        session['count'] = count
+        print(count, len(session['all']))
+
+        return jsonify({"count": session['count'], "all": session['all']})
+
+
+
+@app.route('/validation', methods=['GET'])
+def display_validation():
+    """function to return the HTML page to display the sentence"""
+    session['validation_count'] = 0
+    files = get_all_validations()
+
+    if "read_validations" in session:
+        read_items = session.get('read_validations', None)
+        session['read_validations'] = read_items
+        session['all_validations'] = [(str(instance._id), instance.orginal_gronings) for instance in files if
+                          str(instance._id) not in session["read_validations"]]
+        all = session["all_validations"]
+
+    else:
+        all = [(str(instance._id), instance.annotated_gronings , instance.orginal_gronings ) for instance in files]
+        session["all_validations"] = all
+
+    return render_template('validation.html', all=all, count=session['validation_count'])
+
+
+@app.route('/get_validations', methods=['GET'])
+def get_validations():
+
+    _direction = request.args.get('direction')
+    val_count = session.get('validation_count', None)
+    session['validation_count'] = val_count
+    session['validation_count'] = session['validation_count'] + (1 if _direction == 'f' else - 1)
+
+    files = get_all_validations()
+
+    if 'read_validation' in session:
+
+        read_items = session.get('read_validation', None)
+        session['read_validation'] = read_items
+        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
+                                      instance in files if
+                                      str(instance._id) not in session['read_validation']]
+    else:
+        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
+                                      instance in files]
+
     return jsonify(
-        {'sentence': _files[session['count']], 'forward': str(session['count'] + 1 < len(_files)),
-         'back': str(bool(session['count']))})
+        {'forward': str(session['validation_count'] + 1 < len(session["all_validations"])),
+         'back': str(bool(session['validation_count'])), "count": session['validation_count'],
+         "all": session['all_validations']})
 
 
 """Char NL"""
@@ -128,7 +215,6 @@ def predict_predict_nl_gro():
         return abort(404)
 
 
-#
 """Char gro nl"""
 
 
@@ -174,7 +260,6 @@ def predict_nl_gro_bpe():
         with graph.as_default():
             output = get_predictions(bpe_args, bpe_params, bpe_models, bpe_dataset)
         # Detokenize and restore
-        print("translated", output)
         p = subprocess.Popen('bash restore.sh', shell=True, cwd=os.getcwd(), stdout=subprocess.PIPE)
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
