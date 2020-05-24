@@ -144,7 +144,6 @@ def store_in_mongo():
         return jsonify({"count": session['count'], "all": session['all']})
 
 
-
 @app.route('/validation', methods=['GET'])
 def display_validation():
     """function to return the HTML page to display the sentence"""
@@ -154,12 +153,12 @@ def display_validation():
     if "read_validations" in session:
         read_items = session.get('read_validations', None)
         session['read_validations'] = read_items
-        session['all_validations'] = [(str(instance._id), instance.orginal_gronings) for instance in files if
-                          str(instance._id) not in session["read_validations"]]
+        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for instance in files if
+                                      str(instance._id) not in session["read_validations"]]
         all = session["all_validations"]
 
     else:
-        all = [(str(instance._id), instance.annotated_gronings , instance.orginal_gronings ) for instance in files]
+        all = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for instance in files]
         session["all_validations"] = all
 
     return render_template('validation.html', all=all, count=session['validation_count'])
@@ -167,7 +166,6 @@ def display_validation():
 
 @app.route('/get_validations', methods=['GET'])
 def get_validations():
-
     _direction = request.args.get('direction')
     val_count = session.get('validation_count', None)
     session['validation_count'] = val_count
