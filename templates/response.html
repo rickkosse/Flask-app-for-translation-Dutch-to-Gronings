@@ -1,0 +1,33 @@
+<div class="form-row" id="dynamic_appending">
+    <div class="form-group col-md-6">
+        <form action="#">
+            {% if all_validations is defined and all_validations %}
+                {% for validations in all_validations[count][1] %}
+                    <p>
+                        <label>
+
+                            <input type="checkbox" class="messageCheckbox" name="val"/>
+                            <span src="{{ validations }}"
+                                  id='validation_loop'>{{ validations }}</span>
+                        </label>
+                    </p>
+                {% endfor %}
+
+            {% else %}
+                <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
+            {% endif %}
+        </form>
+    </div>
+    <div class="form-group col-md-6">
+        <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
+             style="display:inline-block;">
+            {% if all_validations is defined and all_validations %}
+
+                <p src="{{ all_validations[count][2] }}"
+                   id='validation_display'>{{ all_validations[count][2] }}</p>
+            {% else %}
+                <p id='validation_display'> Helaas! Geen zinnen meer in de database</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
