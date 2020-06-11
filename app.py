@@ -2,7 +2,6 @@
 from __future__ import print_function
 import sys, random, string
 import os
-
 sys.path.append(os.getcwd() + "/nmtkeras/nmt_keras")
 sys.path.append(os.getcwd() + '/nmtkeras')
 from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for
@@ -12,10 +11,7 @@ import tensorflow as tf
 import subprocess
 import time
 from nmtkeras import sample_ensemble
-from mongo_db import get_annotation, get_all_annotation, store_anno_in_mongo, get_all_validations
-import json
-from _collections import defaultdict
-
+from mongo_db import store_valid_in_mongo, get_all_annotation, store_anno_in_mongo, get_all_validations
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
 Bootstrap(app)
@@ -82,7 +78,6 @@ def display_sent():
     """function to return the HTML page to display the sentence"""
     session['count'] = 0
     files = get_all_annotation()
-    print("Begin pagina")
 
     if "read_items" in session:
         read_items = session.get('read_items', None)
@@ -106,19 +101,19 @@ def get_anno():
     session['count'] = session['count'] + (1 if _direction == 'f' else - 1)
     files = get_all_annotation()
     if 'read_items' in session:
-
-        print("read in anno", session['read_items'])
         read_items = session.get('read_items', None)
         session['read_items'] = read_items
         session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files if
                           str(instance._id) not in session['read_items']]
     else:
-        print("creating session")
         session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files]
 
-        return jsonify(
-            {'forward': str(session['count'] + 1 < len(session["all"])),
-             'back': str(bool(session['count'])), "count": session['count'], "all": session['all']})
+    print("anno", count, len(session['all']))
+    print(session['all'][count])
+
+    return jsonify(
+        {'forward': str(session['count'] + 1 < len(session["all"])),
+         'back': str(bool(session['count'])), "count": session['count'], "all": session['all']})
 
 
 @app.route('/store_in_mongo', methods=['POST'])
@@ -126,20 +121,20 @@ def store_in_mongo():
     if request.method == 'POST':
         anno = request.form['annotation']
         original_id = request.form['original_id']
-        storing = store_anno_in_mongo(anno, original_id)
-        if "read_items" in session:
+        store_anno_in_mongo(anno, original_id)
+        if 'read_items' in session:
             read_items = session.get('read_items', None)
-            read_items.append(original_id)
+            read_items.append(str(original_id))
             session['read_items'] = read_items
         else:
-            session['read_items'] = [original_id]
-
-        if "all" in session:
+            session['read_items'] = [str(original_id)]
+        if 'all' in session:
             all_items = session.get('all', None)
-            session['all'] = [i for i in all_items if i[0] not in session['read_items']]
+            session['all'] = [i for i in all_items if str(i[0]) not in session['read_items']]
         count = session.get('count', None)
-        session['count'] = count
-        print(count, len(session['all']))
+
+        if int(count) != 0:
+            session['count'] = count - 1
 
         return jsonify({"count": session['count'], "all": session['all']})
 
@@ -153,7 +148,8 @@ def display_validation():
     if "read_validations" in session:
         read_items = session.get('read_validations', None)
         session['read_validations'] = read_items
-        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for instance in files if
+        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
+                                      instance in files if
                                       str(instance._id) not in session["read_validations"]]
         all = session["all_validations"]
 
@@ -184,10 +180,42 @@ def get_validations():
         session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
                                       instance in files]
 
+    print(len(session['all_validations']))
+    print(str(session['validation_count'] + 1 < len(session['all_validations'])))
+
     return jsonify(
-        {'forward': str(session['validation_count'] + 1 < len(session["all_validations"])),
+        {'forward': str(session['validation_count'] + 1 < len(session['all_validations'])),
          'back': str(bool(session['validation_count'])), "count": session['validation_count'],
-         "all": session['all_validations']})
+         'all': session['all_validations']})
+
+
+@app.route('/store_validation_in_mongo', methods=['POST'])
+def store_validation_in_mongo():
+    if request.method == 'POST':
+        print(request.form)
+        original_id = request.form['original_id']
+        best = request.form['best_pick']
+        print(best, original_id)
+        store_valid_in_mongo(best, original_id)
+        if 'read_validations' in session:
+            read_items = session.get('read_validations', None)
+            read_items.append(str(original_id))
+            session['read_validations'] = read_items
+        else:
+            session['read_validations'] = [str(original_id)]
+        if 'all_validations' in session:
+            all_items = session.get('all_validations', None)
+            print("old", all_items)
+            session['all_validations'] = [i for i in all_items if str(i[0]) not in session['read_validations']]
+            print("new", session['all_validations'])
+        count = session.get('validation_count', None)
+        if int(count) != 0:
+            session['validation_count'] = count - 1
+
+        return jsonify({'count': session['validation_count'],
+                        'all_validations': session['all_validations'],
+                        'data': render_template('response.html', count=session['validation_count'],
+                                                all_validations=session['all_validations'])})
 
 
 """Char NL"""
@@ -198,6 +226,13 @@ def predict_predict_nl_gro():
     # Validation
     if request.method == 'POST':
         translation_query = request.form['translation']
+        translation_query = translation_query.strip()
+
+        if translation_query[-1] not in string.punctuation:
+            translation_query = translation_query + "."
+            punctuation_alert = True
+        else:
+            punctuation_alert = False
         # Preprocess
         processed = process(translation_query)
         # Tokenize to Char
@@ -208,6 +243,8 @@ def predict_predict_nl_gro():
             output = get_predictions(char_args, char_params, char_models, char_dataset)
         # Detokenize and restore
         output_sen = restore(output)
+        if punctuation_alert:
+            output_sen = output_sen[0:-1]
         return jsonify({'translation': output_sen})
     else:
         return abort(404)
@@ -221,6 +258,13 @@ def predict_gro_nl():
     # Validation
     if request.method == 'POST':
         translation_query = request.form['translation']
+        translation_query = translation_query.strip()
+
+        if translation_query[-1] not in string.punctuation:
+            translation_query = translation_query + "."
+            punctuation_alert = True
+        else:
+            punctuation_alert = False
         # Preprocess
         processed = process(translation_query)
         # Tokenize to Char
@@ -231,6 +275,8 @@ def predict_gro_nl():
             output = get_predictions(char_args_nl, char_params_nl, char_models_nl, char_dataset_nl)
         # Detokenize and restore
         output_sen = restore(output)
+        if punctuation_alert:
+            output_sen = output_sen[0:-1]
 
         return jsonify({'translation': output_sen})
 
@@ -246,6 +292,13 @@ def predict_nl_gro_bpe():
     # Validation
     if request.method == 'POST':
         translation_query = request.form['translation']
+        translation_query = translation_query.strip()
+
+        if translation_query[-1] not in string.punctuation:
+            translation_query = translation_query + "."
+            punctuation_alert = True
+        else:
+            punctuation_alert = False
         # Preprocess
         processed = process(translation_query)
         create_file = bpe_write_to_file(processed)
@@ -262,6 +315,8 @@ def predict_nl_gro_bpe():
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
         output_sen = detokenized
+        if punctuation_alert:
+            output_sen = output_sen[0:-1]
 
         return jsonify({'translation': output_sen})
 
@@ -277,6 +332,13 @@ def predict_gro_nl_bpe():
     # Validation
     if request.method == 'POST':
         translation_query = request.form['translation']
+        translation_query = translation_query.strip()
+
+        if translation_query[-1] not in string.punctuation:
+            translation_query = translation_query + "."
+            punctuation_alert = True
+        else:
+            punctuation_alert = False
         # Preprocess
         processed = process(translation_query)
         create_file = bpe_NL_write_to_file(processed)
@@ -294,6 +356,8 @@ def predict_gro_nl_bpe():
         detokenized = p.communicate()[0].decode("utf-8")
         print("predicted translation:", detokenized)
         output_sen = detokenized
+        if punctuation_alert:
+            output_sen = output_sen[0:-1]
 
         return jsonify({'translation': output_sen})
 
