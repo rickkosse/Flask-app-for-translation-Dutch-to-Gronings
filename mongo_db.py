@@ -13,7 +13,7 @@ def connect_to_mongo():
         _id = ObjectIdField()
         orginal_gronings = StringField()
         annotated_gronings = ListField(StringField())
-        best_pick = ListField(null=True)
+        best_pick = ListField()
         is_annotated = BooleanField(default=False)
 
     return Gronings_Annotation
@@ -34,11 +34,11 @@ def get_annotation():
 
 
 def get_all_annotation():
-    return Gronings_Annotation.objects(annotated_gronings__3__exists=False)
+    return Gronings_Annotation.objects(annotated_gronings__2__exists=False)
 
 
 def get_all_validations():
-    return Gronings_Annotation.objects(annotated_gronings__3__exists=True)
+    return Gronings_Annotation.objects(Q(annotated_gronings__2__exists=True) and Q(best_pick__1__exist=False))
 
 
 def store_anno_in_mongo(sentence, ids):
@@ -47,12 +47,18 @@ def store_anno_in_mongo(sentence, ids):
     instance = Gronings_Annotation.objects(_id=Objected_id).get()
 
     if instance.annotated_gronings:
-        print("er betaan al sents")
         Gronings_Annotation.objects(_id=Objected_id).update_one(push__annotated_gronings=sentence)
     else:
-        print("er bestaat nog niks")
-        sentence=[sentence]
+        sentence = [sentence]
         Gronings_Annotation.objects(_id=Objected_id).update_one(set__annotated_gronings=sentence)
 
-
     logging.info("Updated DB")
+
+
+def store_valid_in_mongo(best_pick, ids):
+    Objected_id = ObjectId(str(ids).strip())
+    best_pick = str(best_pick)
+
+    Gronings_Annotation.objects(_id=Objected_id).update_one(best_pick=best_pick)
+
+    logging.info("Updated DB for validation")
