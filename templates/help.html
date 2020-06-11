@@ -8,25 +8,10 @@
                     <div class="form-group col-md-6">
                         <label class="sr-only" for="trans_input"></label>
                         <textarea class="form-control z-depth-2" id="anno_input" rows="5"
-                                  placeholder="Vertaal naar Nederlands..." required> </textarea>
+                                  placeholder="Vertaal naar Nederlands..." {% if all|length < 1 %}disabled{% endif %} required></textarea>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="inputPassword4"></label>
-                        <div class="preloader-wrapper small active" id="loadingDiv" style="display:none;">
-                            <div class="spinner-layer spinner-blue-only">
-                                <div class="circle-clipper left">
-                                    <div class="circle"></div>
-                                </div>
-                                <div class="gap-patch">
-                                    <div class="circle"></div>
-                                </div>
-                                <div class="circle-clipper right">
-                                    <div class="circle"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                         <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
+                        <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
                              style="display:inline-block;">
                             {% if all is defined and all %}
                                 <p src="{{ all[count][1] }}"
@@ -40,7 +25,8 @@
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2" role="group" aria-label="First group">
                         <form id="help_translating_form">
-                            <button type="submit"  id="sending" class="btn btn-secondary" {% if not all %}disabled{% endif %}>
+                            <button type="submit" id="sending" class="btn btn-secondary"
+                                    {% if not all %}disabled{% endif %}>
                                 Verstuur
                             </button>
                         </form>
@@ -48,7 +34,7 @@
                     <div class="btn-group mr-2" role="group" aria-label="First group">
                         <div class='forward'>
                             <button id='go_forward' class='navigate btn btn-primary'
-                                    {% if not all %}disabled{% endif %}>Volgende
+                                    {% if all|length <= 1 %}disabled{% endif %}>Volgende
                             </button>
                         </div>
                     </div>
