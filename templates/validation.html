@@ -3,45 +3,46 @@
     <meta id="my-validation" data-id="{% if all is defined and all %} {{ all[count][0] }} {% endif %}">
     <div class="card-body">
         <div class='validation_display'>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <form action="#">
-                            {% if all is defined and all %}
-                                {% for validations in all[count][1] %}
-                                    <p>
-                                        <label>
+            <div class="card-body" >
+                <div id="dynamic_data">
+                    <div class="form-row" id="dynamic_appending">
+                        <div class="form-group col-md-6">
+                            <form action="#">
+                                {% if all is defined and all %}
+                                    {% for validations in all[count][1] %}
+                                        <p>
+                                            <label>
 
-                                            <input type="checkbox"/>
-                                            <span src="{{ validations }}"
-                                                  id='validation_display'>{{ validations }}</span>
-                                        </label>
-                                    </p>
-                                {% endfor %}
+                                                <input type="checkbox" class="messageCheckbox" name="val"/>
+                                                <span src="{{ validations }}"
+                                                      id='validation_loop'>{{ validations }}</span>
+                                            </label>
+                                        </p>
+                                    {% endfor %}
 
-                            {% else %}
-                                <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
-                            {% endif %}
-                        </form>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
-                             style="display:inline-block;">
-                            {% if all is defined and all %}
+                                {% else %}
+                                    <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
+                                {% endif %}
+                            </form>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div id="successAlert" class="alert alert-secondary mb-0" role="alert"
+                                 style="display:inline-block;">
+                                {% if all is defined and all %}
 
-                                <p src="{{ all[count][2] }}"
-                                   id='validation_display'>{{ all[count][2] }}</p>
-                            {% else %}
-                                <p id='validation_display'> Helaas! Geen zinnen meer in de database</p>
-                            {% endif %}
+                                    <p src="{{ all[count][2] }}"
+                                       id='validation_display'>{{ all[count][2] }}</p>
+                                {% else %}
+                                    <p id='validation_display'> Helaas! Geen zinnen meer in de database</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2" role="group" aria-label="First group">
-                        <form id="help_translating_form">
-                            <button type="submit" class="btn btn-secondary"
+                        <form id="help_validation_form">
+                            <button type="submit" id="sending" class="btn btn-secondary"
                                     {% if not all %}disabled{% endif %}>
                                 Verstuur
                             </button>
@@ -50,7 +51,7 @@
                     <div class="btn-group mr-2" role="group" aria-label="First group">
                         <div class='forward'>
                             <button id='go_forward' class='navigate btn btn-primary'
-                                    {% if not all %}disabled{% endif %}>Volgende
+                                    {% if all|length <= 1 %}disabled{% endif %}>Volgende
                             </button>
                         </div>
                     </div>
