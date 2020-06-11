@@ -4,6 +4,8 @@
 
 
     <title>Vertoal'n</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -14,27 +16,71 @@
 
 </head>
 <body>
-{#<div class="p-3 mb-2 bg-success"></div>#}
-{#<div style="background-color: #007700; height: 200px; width: 100%"></div>#}
 
+{#<div class="p-3 mb-2 bg-success"></div>#}
+{#<div style=background:linear-gradient(110deg, #fdcd3b 60%,#ffed4b 60%); ></div>#}
 <div class="container">
+
     <div class="card">
         <div class="card-header">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active"  href="{{ url_for('home') }}">Vertalen</a>
+                    <a id="translate_tab" class="nav-link" href="{{ url_for('home') }}">Vertalen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('display_sent') }}">Mee helpen</a>
+                    <a id="help_tab" class="nav-link" href="{{ url_for('display_sent') }}">Mee helpen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link"  href="{{ url_for('display_validation') }}">Valideren</a>
+                    <a id="validation_tab" class="nav-link" href="{{ url_for('display_validation') }}">Valideren</a>
                 </li>
             </ul>
             {% block content %}{% endblock %}
         </div>
     </div>
+
+    {#    <div class=" text-center">#}
+    {##}
+    {#        <div class="card-body">#}
+    {#            <i class="large material-icons">translate</i>#}
+    {#            <i class="large material-icons">tune</i>#}
+    {#            <i class="large material-icons">check_box</i>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <div class="row justify-content-center">
+        <div class="col-sm-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Help ons vertalen!</h5>
+                    <p class="card-text">Om meer data te vergaren. Zoeken we mensen die willen helpen Groningse zinnen
+                        te vertalen naar het Nederlands</p>
+                    <a href="{{ url_for('display_sent') }}" class="btn btn-primary">Mee helpen!</a>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Help ons valideren!</h5>
+                    <p class="card-text">Omdat er iedereen zijn eigen stijl Gronings heeft. Hebben we een pagina waar je
+                        kunt helpen valideren welke vertaling juist is.</p>
+                    <a href="{{ url_for('display_validation') }}" class="btn btn-primary ">Help valideren!</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Help ons groeien!</h5>
+                    <p class="card-text">Dit project is een vrijwillig project opgezet door de RUG</p>
+{#                    <a href="{{ url_for('display_validation') }}" class="btn btn-primary ">Help valideren!</a>#}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
