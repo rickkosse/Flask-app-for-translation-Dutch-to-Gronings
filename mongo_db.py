@@ -5,6 +5,8 @@ from bson.objectid import ObjectId
 
 logging.basicConfig(level=logging.INFO)
 
+base_value = 500
+
 
 def connect_to_mongo():
     connect('annotater', host=uri)
@@ -34,7 +36,7 @@ def get_annotation():
 
 
 def get_all_annotation():
-    return Gronings_Annotation.objects(annotated_gronings__2__exists=False)
+    return Gronings_Annotation.objects(annotated_gronings__2__exists=False)[:base_value]
 
 
 def get_all_validations():
@@ -62,3 +64,13 @@ def store_valid_in_mongo(best_pick, ids):
     Gronings_Annotation.objects(_id=Objected_id).update_one(best_pick=best_pick)
 
     logging.info("Updated DB for validation")
+
+
+def replete_anno_db(read_items):
+    return Gronings_Annotation.objects(Q(annotated_gronings__2__exists=False) and Q(_id__nin=read_items))[
+           :base_value]
+
+
+def replete_valid_db(read_vals):
+    return Gronings_Annotation.objects( Q(annotated_gronings__2__exists=True) & Q(best_pick__1__exist=False) & Q(_id__nin=read_vals))[
+           :base_value]
