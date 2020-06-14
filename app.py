@@ -2,6 +2,7 @@
 from __future__ import print_function
 import sys, random, string
 import os
+from random import shuffle
 sys.path.append(os.getcwd() + "/nmtkeras/nmt_keras")
 sys.path.append(os.getcwd() + '/nmtkeras')
 from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for
@@ -11,7 +12,8 @@ import tensorflow as tf
 import subprocess
 import time
 from nmtkeras import sample_ensemble
-from mongo_db import store_valid_in_mongo, get_all_annotation, store_anno_in_mongo, get_all_validations
+from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, get_all_validations, replete_anno_db
+
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
 Bootstrap(app)
@@ -73,25 +75,38 @@ def home():
     return render_template('vertaal.html')
 
 
+def update_anno(read_items=None):
+    if read_items is None:
+        read_items = []
+    files = replete_anno_db(read_items)
+    all = [(str(instance._id), instance.orginal_gronings) for instance in files if
+                      str(instance._id) not in read_items]
+    return all
+
+def update_valid(read_items=None):
+    if read_items is None:
+        read_items = []
+    files = replete_valid_db(read_items)
+    all = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
+                                      instance in files if
+                                      str(instance._id) not in read_items]
+    return all
+
 @app.route('/help', methods=['GET'])
 def display_sent():
     """function to return the HTML page to display the sentence"""
     session['count'] = 0
-    files = get_all_annotation()
 
     if "read_items" in session:
         read_items = session.get('read_items', None)
         session['read_items'] = read_items
-        session["all"] = [(str(instance._id), instance.orginal_gronings) for instance in files if
-                          str(instance._id) not in session["read_items"]]
-        all = session["all"]
+        all = update_anno(read_items)
 
     else:
-        all = [(str(instance._id), instance.orginal_gronings) for instance in files]
-        session["all"] = all
+        all = update_anno()
+    shuffle(all)
 
     return render_template('help.html', all=all, count=session['count'])
-
 
 @app.route('/get_anno', methods=['GET'])
 def get_anno():
@@ -99,21 +114,17 @@ def get_anno():
     count = session.get('count', None)
     session['count'] = count
     session['count'] = session['count'] + (1 if _direction == 'f' else - 1)
-    files = get_all_annotation()
-    if 'read_items' in session:
+    if "read_items" in session:
         read_items = session.get('read_items', None)
         session['read_items'] = read_items
-        session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files if
-                          str(instance._id) not in session['read_items']]
-    else:
-        session['all'] = [(str(instance._id), instance.orginal_gronings) for instance in files]
+        all = update_anno(read_items)
 
-    print("anno", count, len(session['all']))
-    print(session['all'][count])
+    else:
+        all = update_anno()
 
     return jsonify(
-        {'forward': str(session['count'] + 1 < len(session["all"])),
-         'back': str(bool(session['count'])), "count": session['count'], "all": session['all']})
+        {'forward': str(session['count'] + 1 < len(all)),
+         'back': str(bool(session['count'])), "count": session['count'], "all": all})
 
 
 @app.route('/store_in_mongo', methods=['POST'])
@@ -128,34 +139,36 @@ def store_in_mongo():
             session['read_items'] = read_items
         else:
             session['read_items'] = [str(original_id)]
-        if 'all' in session:
-            all_items = session.get('all', None)
-            session['all'] = [i for i in all_items if str(i[0]) not in session['read_items']]
+
+        if "read_items" in session:
+            read_items = session.get('read_items', None)
+            session['read_items'] = read_items
+            all = update_anno(read_items)
+
+        else:
+            all = update_anno()
         count = session.get('count', None)
 
         if int(count) != 0:
             session['count'] = count - 1
 
-        return jsonify({"count": session['count'], "all": session['all']})
+        return jsonify({"count": session['count'], "all": all})
 
 
 @app.route('/validation', methods=['GET'])
 def display_validation():
     """function to return the HTML page to display the sentence"""
     session['validation_count'] = 0
-    files = get_all_validations()
 
     if "read_validations" in session:
         read_items = session.get('read_validations', None)
         session['read_validations'] = read_items
-        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
-                                      instance in files if
-                                      str(instance._id) not in session["read_validations"]]
-        all = session["all_validations"]
+        all = update_valid(read_items)
 
     else:
-        all = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for instance in files]
-        session["all_validations"] = all
+        all = update_valid()
+
+    shuffle(all)
 
     return render_template('validation.html', all=all, count=session['validation_count'])
 
@@ -169,33 +182,25 @@ def get_validations():
 
     files = get_all_validations()
 
-    if 'read_validation' in session:
+    if "read_validations" in session:
+        read_items = session.get('read_validations', None)
+        session['read_validations'] = read_items
+        all = update_valid(read_items)
 
-        read_items = session.get('read_validation', None)
-        session['read_validation'] = read_items
-        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
-                                      instance in files if
-                                      str(instance._id) not in session['read_validation']]
     else:
-        session['all_validations'] = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
-                                      instance in files]
-
-    print(len(session['all_validations']))
-    print(str(session['validation_count'] + 1 < len(session['all_validations'])))
+        all = update_valid()
 
     return jsonify(
         {'forward': str(session['validation_count'] + 1 < len(session['all_validations'])),
          'back': str(bool(session['validation_count'])), "count": session['validation_count'],
-         'all': session['all_validations']})
+         'all': all})
 
 
 @app.route('/store_validation_in_mongo', methods=['POST'])
 def store_validation_in_mongo():
     if request.method == 'POST':
-        print(request.form)
         original_id = request.form['original_id']
         best = request.form['best_pick']
-        print(best, original_id)
         store_valid_in_mongo(best, original_id)
         if 'read_validations' in session:
             read_items = session.get('read_validations', None)
@@ -203,19 +208,23 @@ def store_validation_in_mongo():
             session['read_validations'] = read_items
         else:
             session['read_validations'] = [str(original_id)]
-        if 'all_validations' in session:
-            all_items = session.get('all_validations', None)
-            print("old", all_items)
-            session['all_validations'] = [i for i in all_items if str(i[0]) not in session['read_validations']]
-            print("new", session['all_validations'])
+
+        if "read_validations" in session:
+            read_items = session.get('read_validations', None)
+            session['read_validations'] = read_items
+            all = update_valid(read_items)
+
+        else:
+            all = update_valid()
+
         count = session.get('validation_count', None)
         if int(count) != 0:
             session['validation_count'] = count - 1
 
         return jsonify({'count': session['validation_count'],
-                        'all_validations': session['all_validations'],
+                        'all_validations': all,
                         'data': render_template('response.html', count=session['validation_count'],
-                                                all_validations=session['all_validations'])})
+                                                all_validations=all)})
 
 
 """Char NL"""
