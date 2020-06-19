@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 from __future__ import print_function
-import sys, random, string
+
 import os
-from random import shuffle
-sys.path.append(os.getcwd() + "/nmtkeras/nmt_keras")
-sys.path.append(os.getcwd() + '/nmtkeras')
-from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for
-from flask_bootstrap import Bootstrap
-from proces_and_convert_to_char import process, convert_char, restore
-import tensorflow as tf
+import random
+import string
 import subprocess
 import time
-from nmtkeras import sample_ensemble
+from random import shuffle
+import sys
+import tensorflow as tf
+from flask import Flask, render_template, request, jsonify, abort, session
+
 from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, get_all_validations, replete_anno_db
+#TODO change directory. sys.path.append messed up the import
+from nmt-keras.sample_ensemble import *
+
+from proces_and_convert_to_char import process, convert_char, restore
 
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
-Bootstrap(app)
 
 app.secret_key = ''.join(random.choice(string.printable) for _ in range(20))
-
 
 # to use flask.session, a secret key must be passed to the app instance
 
