@@ -10,11 +10,8 @@ from random import shuffle
 import sys
 import tensorflow as tf
 from flask import Flask, render_template, request, jsonify, abort, session
-
 from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, get_all_validations, replete_anno_db
-#TODO change directory. sys.path.append messed up the import
-from nmt-keras.sample_ensemble import *
-
+from nmtkeras.sample_ensemble import *
 from proces_and_convert_to_char import process, convert_char, restore
 
 # initialize the Flask application and the Keras model
@@ -32,17 +29,17 @@ def init():
         bpe_args, bpe_params, bpe_models, bpe_dataset, \
         bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl
 
-    char_args, char_params, char_models, char_dataset = sample_ensemble.load_in("char", "NL_GRO")
-    char_args_nl, char_params_nl, char_models_nl, char_dataset_nl = sample_ensemble.load_in("char", "GRO_NL")
+    char_args, char_params, char_models, char_dataset = load_in("char", "NL_GRO")
+    char_args_nl, char_params_nl, char_models_nl, char_dataset_nl = load_in("char", "GRO_NL")
 
-    bpe_args, bpe_params, bpe_models, bpe_dataset = sample_ensemble.load_in("BPE", "NL_GRO")
-    bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl = sample_ensemble.load_in("BPE", "GRO_NL")
+    bpe_args, bpe_params, bpe_models, bpe_dataset = load_in("BPE", "NL_GRO")
+    bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl = load_in("BPE", "GRO_NL")
 
     graph = tf.get_default_graph()
 
 
 def get_predictions(args, params, models, dataset):
-    pred = sample_ensemble.predict(args, params, models, dataset)
+    pred = predict(args, params, models, dataset)
     return pred
 
 
