@@ -1,15 +1,12 @@
 import nltk
 import re
 import nltk.data
-import string
 
 
 def restore(sent_list):
 
 	words = [w.replace(' ', '') for w in sent_list]
-	print(words)
 	words_out = ["".join(w.replace('***', ' ')) for w in words]
-	print(words_out)
 	return ''.join(words_out)
 
 def qoute_detector(sentence):
@@ -18,7 +15,6 @@ def qoute_detector(sentence):
 	pattern = re.compile("[!.?]+$")
 	all_punt = [item for item in sentence if pattern.match(item)]
 	indices = [i for i, x in enumerate(words) if x =="." or x=="!" or x =="?"]
-	print(indices)
 
 def punkt_trainer(text):
 	train_text = nltk.data.load('tokenizers/punkt/dutch.pickle')
