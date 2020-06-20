@@ -2,15 +2,15 @@
 NMT-Keras
 =========
 
-Neural Machine Translation with Keras (Theano and Tensorflow).
+Neural Machine Translation with Keras.
 
 .. image:: ../../examples/documentation/attention_nmt_model.png
-   :scale: 40 %
+   :width: 100 %
    :alt: alternate text
    :align: left
 
 .. image:: ../../examples/documentation/transformer_nmt_model.png
-   :scale: 10 %
+   :width: 100 %
    :alt: alternate text
    :align: left
 

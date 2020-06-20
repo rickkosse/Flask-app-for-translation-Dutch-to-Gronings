@@ -14,7 +14,7 @@ import time
 import sys
 import os
 import copy
-import BaseHTTPServer
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import urllib
 from collections import OrderedDict
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../')
@@ -33,7 +33,7 @@ from config import load_parameters
 logger = logging.getLogger(__name__)
 
 
-class NMTHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class NMTHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         do_GET_start_time = time.time()
         args = self.path.split('?')[1]
@@ -50,45 +50,45 @@ class NMTHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         for aa in args:
             cc = aa.split('=')
             if cc[0] == 'source':
-                source_sentence = urllib.unquote_plus(cc[1])
+                source_sentence = urllib.parse.unquote_plus(cc[1])
 
             if cc[0] == 'prefix':
                 validated_prefix = cc[1]
-                validated_prefix = urllib.unquote_plus(validated_prefix)
+                validated_prefix = urllib.parse.unquote_plus(validated_prefix)
 
             if cc[0] == 'learn':
                 learn = cc[1]
-                learn = urllib.unquote_plus(learn)
+                learn = urllib.parse.unquote_plus(learn)
                 learn = eval(learn)
 
             if cc[0] == 'beam_size':
                 beam_size = cc[1]
-                beam_size = urllib.unquote_plus(beam_size)
+                beam_size = urllib.parse.unquote_plus(beam_size)
                 beam_size = int(beam_size)
                 self.server.sampler.params_prediction['beam_size'] = beam_size
 
             if cc[0] == 'length_norm':
                 length_norm = cc[1]
-                length_norm = urllib.unquote_plus(length_norm)
+                length_norm = urllib.parse.unquote_plus(length_norm)
                 length_norm = float(length_norm)
                 self.server.sampler.params_prediction['length_norm_factor'] = length_norm
 
             if cc[0] == 'coverage_norm':
                 coverage_norm = cc[1]
-                coverage_norm = urllib.unquote_plus(coverage_norm)
+                coverage_norm = urllib.parse.unquote_plus(coverage_norm)
                 coverage_norm = float(coverage_norm)
                 self.server.sampler.params_prediction['coverage_norm_factor'] = coverage_norm
 
             if cc[0] == 'alpha_norm':
                 alpha_norm = cc[1]
-                alpha_norm = urllib.unquote_plus(alpha_norm)
+                alpha_norm = urllib.parse.unquote_plus(alpha_norm)
                 alpha_norm = float(alpha_norm)
                 self.server.sampler.params_prediction['alpha_factor'] = alpha_norm
 
         if source_sentence is None:
             self.send_response(400)  # 400: ('Bad Request', 'Bad request syntax or unsupported method')
             return
-        source_sentence = urllib.unquote_plus(source_sentence)
+        source_sentence = urllib.parse.unquote_plus(source_sentence)
         args_processing_end_time = time.time()
         logger.log(2, 'args_processing time: %.6f' % (args_processing_end_time - args_processing_start_time))
 
@@ -139,6 +139,28 @@ class NMTSampler:
     def __init__(self, models, dataset, params, params_prediction, params_training, model_tokenize_f, model_detokenize_f, general_tokenize_f,
                  general_detokenize_f, mapping=None, word2index_x=None, word2index_y=None, index2word_y=None,
                  excluded_words=None, unk_id=1, eos_symbol='/', online=False, verbose=0):
+        """
+        Builds an NMTSampler: An object containing models and dataset, for the interactive-predictive and adaptive framework.
+        :param models:
+        :param dataset:
+        :param dict params: All hyperparameters of the model.
+        :param dict params_prediction: Hyperparameters regarding prediction and search.
+        :param dict params_training:  Hyperparamters regarding incremental training.
+        :param function model_tokenize_f: Function used for tokenizing the input sentence. E.g. BPE.
+        :param function model_detokenize_f: Function used for detokenizing the output sentence. E.g. BPE revert.
+        :param function general_tokenize_f: Function used for tokenizing the input sentence. E.g. Moses tokenizer.
+        :param function general_detokenize_f: Function used for detokenizing the output sentence. E.g. Moses detokenizer.
+        :param dict mapping: Source-target dictionary (for unk_replace heuristics 1 and 2).
+        :param dict word2index_x: Mapping from word strings into indices for the source language.
+        :param dict word2index_y: Mapping from word strings into indices for the target language.
+        :param dict index2word_y: Mapping from indices into word strings for the target language.
+        :param dict excluded_words: words that won't be generated in the middle of two isles. Currenly unused.
+        :param int unk_id: Unknown word index.
+        :param str eos_symbol: End-of-sentence symbol.
+        :param bool online: Whether apply online learning after accepting each hypothesis.
+        :param int verbose: Verbosity level.
+        """
+
         self.models = models
         self.dataset = dataset
         self.params = params
@@ -159,13 +181,15 @@ class NMTSampler:
         self.word2index_y = word2index_y if word2index_y is not None else \
             dataset.vocabulary[params_prediction['OUTPUTS_IDS_DATASET'][0]]['words2idx']
         self.unk_id = unk_id
+
         self.interactive_beam_searcher = InteractiveBeamSearchSampler(self.models,
                                                                       self.dataset,
                                                                       self.params_prediction,
                                                                       excluded_words=self.excluded_words,
                                                                       verbose=self.verbose)
 
-        # Compile Theano sampling function by generating a fake sample # TODO: Find a better way of doing this
+        # Compile sampling function by generating a fake sample.
+        # TODO: Find a better way of doing this
         logger.info('Compiling sampler...')
         self.generate_sample('i')
         logger.info('Done.')
@@ -186,7 +210,18 @@ class NMTSampler:
 
     def generate_sample(self, source_sentence, validated_prefix=None, max_N=5, isle_indices=None,
                         filtered_idx2word=None, unk_indices=None, unk_words=None):
-        print ("In params prediction beam_size: ", self.params_prediction['beam_size'])
+        """
+        Generate sample via constrained search. Options labeled with <<isles>> are untested
+        and likely require some modifications to correctly work.
+        :param source_sentence: Source sentence.
+        :param validated_prefix: Prefix to keep in the output.
+        :param max_N: Maximum number of words to generate between validated segments. <<isles>>
+        :param isle_indices: Indices of the validated segments. <<isles>>
+        :param filtered_idx2word: List of candidate words to be the next one to generate (after generating fixed_words).
+        :param unk_indices: Positions of the unknown words.
+        :param unk_words: Unknown words.
+        :return:
+        """
         logger.log(2, 'Beam size: %d' % (self.params_prediction['beam_size']))
         generate_sample_start_time = time.time()
         if unk_indices is None:
@@ -246,7 +281,6 @@ class NMTSampler:
                 filtered_idx2word = dict((self.word2index_y[candidate_word], candidate_word)
                                          for candidate_word in self.word2index_y if candidate_word[:len(last_user_word)] == last_user_word)
 
-                # if candidate_word.decode('utf-8')[:len(last_user_word)] == last_user_word)
                 if filtered_idx2word != dict():
                     del fixed_words_user[last_user_word_pos]
                     if last_user_word_pos in list(unk_words_dict.keys()):
@@ -266,12 +300,6 @@ class NMTSampler:
                                                                           idx2word=self.index2word_y)
         sample_beam_search_end_time = time.time()
         logger.log(2, 'sample_beam_search time: %.6f' % (sample_beam_search_end_time - sample_beam_search_start_time))
-
-        # # Substitute possible unknown words in isles
-        # unk_in_isles = []
-        # for isle_idx, isle_sequence, isle_words in unks_in_isles:
-        #     if unk_id in isle_sequence:
-        #         unk_in_isles.append((subfinder(isle_sequence, list(trans_indices)), isle_words))
 
         if False and self.params_prediction['pos_unk']:
             alphas = [alphas]
@@ -294,10 +322,6 @@ class NMTSampler:
                                                     verbose=0)[0]
         decoding_predictions_end_time = time.time()
         logger.log(2, 'decoding_predictions time: %.6f' % (decoding_predictions_end_time - decoding_predictions_start_time))
-
-        # for (words_idx, starting_pos), words in unk_in_isles:
-        #     for pos_unk_word, pos_hypothesis in enumerate(range(starting_pos, starting_pos + len(words_idx))):
-        #         hypothesis[pos_hypothesis] = words[pos_unk_word]
 
         # UNK words management
         unk_management_start_time = time.time()
@@ -330,7 +354,12 @@ class NMTSampler:
         return hypothesis
 
     def learn_from_sample(self, source_sentence, target_sentence):
-
+        """
+        Incrementally adapt the model with the validated sample.
+        :param source_sentence: Source sentence (x).
+        :param target_sentence: Target sentence (y).
+        :return:
+        """
         # Tokenize input
         tokenized_input = self.general_tokenize_f(source_sentence, escape=False)
         tokenized_input = self.model_tokenize_f(tokenized_input)
@@ -347,7 +376,7 @@ class NMTSampler:
         tokenized_reference = self.model_tokenize_f(tokenized_reference)
 
         # Build inputs/outpus of the system
-        state_below = self.dataset.loadText([tokenized_reference.encode('utf-8')],
+        state_below = self.dataset.loadText([tokenized_reference],
                                             vocabularies=self.dataset.vocabulary[self.params['OUTPUTS_IDS_DATASET'][0]],
                                             max_len=self.params['MAX_OUTPUT_TEXT_LEN_TEST'],
                                             offset=1,
@@ -358,7 +387,7 @@ class NMTSampler:
 
         # 4.1.3 Ground truth sample -> Interactively translated sentence
         # TODO: Load dense-text if necessary
-        trg_seq = self.dataset.loadTextOneHot([tokenized_reference.encode('utf-8')],
+        trg_seq = self.dataset.loadTextOneHot([tokenized_reference],
                                               vocabularies=self.dataset.vocabulary[self.params['OUTPUTS_IDS_DATASET'][0]],
                                               vocabulary_len=self.dataset.vocabulary_len[self.params['OUTPUTS_IDS_DATASET'][0]],
                                               max_len=self.params['MAX_OUTPUT_TEXT_LEN_TEST'],
@@ -372,17 +401,17 @@ class NMTSampler:
         if self.online_trainer is not None:
             self.online_trainer.train_online([np.asarray([src_seq]), state_below], trg_seq, trg_words=[target_sentence])
         else:
-            logging.warning('Online learning is disabled.')
+            logger.warning('Online learning is disabled.')
 
 
 def main():
     args = parse_args()
     server_address = (args.address, args.port)
-    httpd = BaseHTTPServer.HTTPServer(server_address, NMTHandler)
+    httpd = HTTPServer(server_address, NMTHandler)
     logger.setLevel(args.logging_level)
     parameters = load_parameters()
     if args.config is not None:
-        logging.info("Loading parameters from %s" % str(args.config))
+        logger.info("Loading parameters from %s" % str(args.config))
         parameters = update_parameters(parameters, pkl2dict(args.config))
 
     if args.online:
@@ -414,7 +443,7 @@ def main():
         logger.info('Building BPE')
         if not dataset.BPE_built:
             dataset.build_bpe(parameters.get('BPE_CODES_PATH', parameters['DATA_ROOT_PATH'] + '/training_codes.joint'),
-                              bpe_separator)
+                              separator=bpe_separator)
     # Build tokenization function
     tokenize_f = eval('dataset.' + parameters.get('TOKENIZATION_METHOD', 'tokenize_bpe'))
     detokenize_function = eval('dataset.' + parameters.get('DETOKENIZATION_METHOD', 'detokenize_bpe'))
@@ -423,6 +452,7 @@ def main():
     tokenize_general = dataset.tokenize_moses
     detokenize_general = dataset.detokenize_moses
 
+    # Prediction parameters
     params_prediction = dict()
     params_prediction['max_batch_size'] = parameters.get('BATCH_SIZE', 20)
     params_prediction['n_parallel_loaders'] = parameters.get('PARALLEL_LOADERS', 1)
@@ -442,9 +472,9 @@ def main():
     params_prediction['coverage_norm_factor'] = parameters.get('COVERAGE_NORM_FACTOR', 0.0)
     params_prediction['pos_unk'] = parameters.get('POS_UNK', False)
     params_prediction['heuristic'] = parameters.get('HEURISTIC', 0)
-
-    params_prediction['state_below_maxlen'] = -1 if parameters.get('PAD_ON_BATCH', True) \
-        else parameters.get('MAX_OUTPUT_TEXT_LEN', 50)
+    params_prediction['state_below_index'] = -1
+    params_prediction['output_text_index'] = 0
+    params_prediction['state_below_maxlen'] = -1 if parameters.get('PAD_ON_BATCH', True) else parameters.get('MAX_OUTPUT_TEXT_LEN', 50)
     params_prediction['output_max_length_depending_on_x'] = parameters.get('MAXLEN_GIVEN_X', True)
     params_prediction['output_max_length_depending_on_x_factor'] = parameters.get('MAXLEN_GIVEN_X_FACTOR', 3)
     params_prediction['output_min_length_depending_on_x'] = parameters.get('MINLEN_GIVEN_X', True)
@@ -456,9 +486,15 @@ def main():
         mapping = None if dataset.mapping == dict() else dataset.mapping
     else:
         mapping = None
+
+    if 'transformer' in parameters['MODEL_TYPE'].lower():
+        params_prediction['pos_unk'] = False
+        params_prediction['coverage_penalty'] = False
+
+    # Training parameters
     parameters_training = dict()
     if args.online:
-        logging.info('Loading models from %s' % str(args.models))
+        logger.info('Loading models from %s' % str(args.models))
         parameters_training = {  # Traning parameters
             'n_epochs': parameters['MAX_EPOCH'],
             'shuffle': False,
@@ -471,7 +507,7 @@ def main():
             'lr_gamma': parameters.get('LR_GAMMA', 1.),
             'epochs_for_save': -1,
             'verbose': args.verbose,
-            'eval_on_sets': parameters['EVAL_ON_SETS_KERAS'],
+            'eval_on_sets': parameters.get('EVAL_ON_SETS_KERAS', None),
             'n_parallel_loaders': parameters['PARALLEL_LOADERS'],
             'extra_callbacks': [],  # callbacks,
             'reload_epoch': parameters['RELOAD'],
@@ -498,12 +534,6 @@ def main():
                                             set_optimizer=False)
                            for i in range(len(args.models))]
         models = [updateModel(model, path, -1, full_path=True) for (model, path) in zip(model_instances, args.models)]
-
-        # Set additional inputs to models if using a custom loss function
-        # parameters['USE_CUSTOM_LOSS'] = True if 'PAS' in parameters['OPTIMIZER'] else False
-        # if parameters.get('N_BEST_OPTIMIZER', False):
-        #     logging.info('Using N-best optimizer')
-        # models = build_online_models(models, parameters)
     else:
         models = [loadModel(m, -1, full_path=True) for m in args.models]
 

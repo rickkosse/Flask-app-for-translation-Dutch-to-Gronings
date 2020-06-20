@@ -3,7 +3,10 @@ from __future__ import print_function
 from six import iteritems
 from timeit import default_timer as timer
 import logging
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+
+import os
+
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
 from data_engine.prepare_data import build_dataset, update_dataset_from_file
@@ -28,27 +31,34 @@ def train_model(params, load_dataset=None):
     """
 
     if params['RELOAD'] > 0:
-        logging.info('Resuming training.')
+        logger.info('Resuming training.')
         # Load data
         if load_dataset is None:
             if params['REBUILD_DATASET']:
-                logging.info('Rebuilding dataset.')
+                logger.info('Rebuilding dataset.')
                 dataset = build_dataset(params)
             else:
-                logging.info('Updating dataset.')
+                logger.info('Updating dataset.')
                 dataset = loadDataset(
-                    params['DATASET_STORE_PATH'] + '/Dataset_' + params['DATASET_NAME'] + '_' + params['SRC_LAN'] +
-                    params['TRG_LAN'] + '.pkl')
+                    os.path.join(
+                        params['DATASET_STORE_PATH'],
+                        'Dataset_' +
+                        params['DATASET_NAME'] + '_' +
+                        params['SRC_LAN'] + params['TRG_LAN'] + '.pkl')
+                )
 
-                epoch_offset = 0 if dataset.len_train == 0 else int(params['RELOAD'] * params['BATCH_SIZE'] / dataset.len_train)
+                epoch_offset = 0 if dataset.len_train == 0 else int(
+                    params['RELOAD'] * params['BATCH_SIZE'] / dataset.len_train)
                 params['EPOCH_OFFSET'] = params['RELOAD'] if params['RELOAD_EPOCH'] else epoch_offset
 
                 for split, filename in iteritems(params['TEXT_FILES']):
                     dataset = update_dataset_from_file(dataset,
-                                                       params['DATA_ROOT_PATH'] + '/' + filename + params['SRC_LAN'],
+                                                       os.path.join(params['DATA_ROOT_PATH'],
+                                                                    filename + params['SRC_LAN']),
                                                        params,
                                                        splits=list([split]),
-                                                       output_text_filename=params['DATA_ROOT_PATH'] + '/' + filename + params['TRG_LAN'],
+                                                       output_text_filename=os.path.join(params['DATA_ROOT_PATH'],
+                                                                                         filename + params['TRG_LAN']),
                                                        remove_outputs=False,
                                                        compute_state_below=True,
                                                        recompute_references=True)
@@ -56,7 +66,7 @@ def train_model(params, load_dataset=None):
                 saveDataset(dataset, params['DATASET_STORE_PATH'])
 
         else:
-            logging.info('Reloading and using dataset.')
+            logger.info('Reloading and using dataset.')
             dataset = loadDataset(load_dataset)
     else:
         # Load data
@@ -106,7 +116,7 @@ def train_model(params, load_dataset=None):
                 int(params['RELOAD'] * params['BATCH_SIZE'] / dataset.len_train)
 
     # Store configuration as pkl
-    dict2pkl(params, params['STORE_PATH'] + '/config')
+    dict2pkl(params, os.path.join(params['STORE_PATH'], 'config'))
 
     # Callbacks
     callbacks = buildCallbacks(params, nmt_model, dataset)
@@ -132,7 +142,7 @@ def train_model(params, load_dataset=None):
                        'min_lr': params.get('MIN_LR', 1e-9),
                        'epochs_for_save': params['EPOCHS_FOR_SAVE'],
                        'verbose': params['VERBOSE'],
-                       'eval_on_sets': params['EVAL_ON_SETS_KERAS'],
+                       'eval_on_sets': None,  # Unsupported for autorreggressive models
                        'n_parallel_loaders': params['PARALLEL_LOADERS'],
                        'extra_callbacks': callbacks,
                        'reload_epoch': params['RELOAD'],
@@ -140,27 +150,28 @@ def train_model(params, load_dataset=None):
                        'data_augmentation': params['DATA_AUGMENTATION'],
                        'patience': params.get('PATIENCE', 0),  # early stopping parameters
                        'metric_check': params.get('STOP_METRIC', None) if params.get('EARLY_STOP', False) else None,
+                       'min_delta': params.get('MIN_DELTA', 0.),
                        'eval_on_epochs': params.get('EVAL_EACH_EPOCHS', True),
                        'each_n_epochs': params.get('EVAL_EACH', 1),
                        'start_eval_on_epoch': params.get('START_EVAL_ON_EPOCH', 0),
-                       'tensorboard': params.get('TENSORBOARD', False),
                        'n_gpus': params.get('N_GPUS', 1),
-                       'tensorboard_params': {'log_dir': params.get('LOG_DIR', 'tensorboard_logs'),
-                                              'histogram_freq': params.get('HISTOGRAM_FREQ', 0),
-                                              'batch_size': params.get('TENSORBOARD_BATCH_SIZE', params['BATCH_SIZE']),
-                                              'write_graph': params.get('WRITE_GRAPH', True),
-                                              'write_grads': params.get('WRITE_GRADS', False),
-                                              'write_images': params.get('WRITE_IMAGES', False),
-                                              'embeddings_freq': params.get('EMBEDDINGS_FREQ', 0),
-                                              'embeddings_layer_names': params.get('EMBEDDINGS_LAYER_NAMES', None),
-                                              'embeddings_metadata': params.get('EMBEDDINGS_METADATA', None),
-                                              'label_word_embeddings_with_vocab': params.get(
-                                                  'LABEL_WORD_EMBEDDINGS_WITH_VOCAB', False),
-                                              'word_embeddings_labels': params.get('WORD_EMBEDDINGS_LABELS', None),
-                                              }
+                       'tensorboard': params.get('TENSORBOARD', False),
+                       'tensorboard_params':
+                           {
+                               'log_dir': params.get('LOG_DIR', 'tensorboard_logs'),
+                               'histogram_freq': params.get('HISTOGRAM_FREQ', 0),
+                               'batch_size': params.get('TENSORBOARD_BATCH_SIZE', params['BATCH_SIZE']),
+                               'write_graph': params.get('WRITE_GRAPH', True),
+                               'write_grads': params.get('WRITE_GRADS', False),
+                               'write_images': params.get('WRITE_IMAGES', False),
+                               'embeddings_freq': None,
+                               'embeddings_layer_names': None,
+                               'embeddings_metadata': None,
+                               'word_embeddings_labels': None,
+                               'update_freq': params.get('UPDATE_FREQ', 'epoch')}
                        }
     nmt_model.trainNet(dataset, training_params)
 
     total_end_time = timer()
     time_difference = total_end_time - total_start_time
-    logging.info('In total is {0:.2f}s = {1:.2f}m'.format(time_difference, time_difference / 60.0))
+    logger.info('In total is {0:.2f}s = {1:.2f}m'.format(time_difference, time_difference / 60.0))

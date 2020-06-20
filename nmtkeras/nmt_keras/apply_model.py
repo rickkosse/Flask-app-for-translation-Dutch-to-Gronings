@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+
 try:
     import itertools.imap as map
 except ImportError:
     pass
 import logging
 from keras_wrapper.extra.read_write import list2file, nbest2file, list2stdout, numpy2file, pkl2dict
+from nmtkeras.data_engine.prepare_data import update_dataset_from_file
+from keras_wrapper.model_ensemble import BeamSearchEnsemble
 from keras_wrapper.cnn_model import loadModel
 from keras_wrapper.dataset import loadDataset
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+from keras_wrapper.utils import decode_predictions_beam_search
+
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
 def char_loading(args):
@@ -28,7 +33,6 @@ def bpe_loading(args):
 
     return models, dataset
 
-
 def sample_ensemble(args, params, models, dataset ):
     """
     Use several translation models for obtaining predictions from a source text file.
@@ -47,10 +51,6 @@ def sample_ensemble(args, params, models, dataset ):
 
     :param params: parameters of the translation model.
     """
-    from data_engine.prepare_data import update_dataset_from_file
-    from keras_wrapper.model_ensemble import BeamSearchEnsemble
-    from keras_wrapper.utils import decode_predictions_beam_search
-
 
     dataset = update_dataset_from_file(dataset, args.text, params, splits=args.splits, remove_outputs=False)
 
@@ -86,7 +86,8 @@ def sample_ensemble(args, params, models, dataset ):
     params_prediction['output_max_length_depending_on_x_factor'] = params.get('MAXLEN_GIVEN_X_FACTOR', 3)
     params_prediction['output_min_length_depending_on_x'] = params.get('MINLEN_GIVEN_X', True)
     params_prediction['output_min_length_depending_on_x_factor'] = params.get('MINLEN_GIVEN_X_FACTOR', 2)
-    params_prediction['attend_on_output'] = params.get('ATTEND_ON_OUTPUT', 'transformer' in params['MODEL_TYPE'].lower())
+    params_prediction['attend_on_output'] = params.get('ATTEND_ON_OUTPUT',
+                                                       'transformer' in params['MODEL_TYPE'].lower())
     params_prediction['glossary'] = params.get('GLOSSARY', None)
 
     heuristic = params.get('HEURISTIC', 0)
@@ -101,7 +102,9 @@ def sample_ensemble(args, params, models, dataset ):
         glossary = None
 
     if model_weights is not None and model_weights != []:
-        assert len(model_weights) == len(models), 'You should give a weight to each model. You gave %d models and %d weights.' % (len(models), len(model_weights))
+        assert len(model_weights) == len(
+            models), 'You should give a weight to each model. You gave %d models and %d weights.' % (
+        len(models), len(model_weights))
         model_weights = map(float, model_weights)
         if len(model_weights) > 1:
             logger.info('Giving the following weights to each model: %s' % str(model_weights))
@@ -116,12 +119,12 @@ def sample_ensemble(args, params, models, dataset ):
             predictions = beam_searcher.predictBeamSearchNet()[s]
             n_best = None
         if params_prediction['pos_unk']:
-            samples = predictions[0]
-            alphas = predictions[1]
+            samples = predictions['samples']
+            alphas = predictions['alphas']
             sources = [x.strip() for x in open(args.text, 'r').read().split('\n')]
             sources = sources[:-1] if len(sources[-1]) == 0 else sources
         else:
-            samples = predictions
+            samples = predictions['samples']
             alphas = None
             heuristic = None
             sources = None
@@ -146,7 +149,8 @@ def sample_ensemble(args, params, models, dataset ):
                     pred = decode_predictions_beam_search([n_best_pred],
                                                           index2word_y,
                                                           glossary=glossary,
-                                                          alphas=[n_best_alpha] if params_prediction['pos_unk'] else None,
+                                                          alphas=[n_best_alpha] if params_prediction[
+                                                              'pos_unk'] else None,
                                                           x_text=[sources[i]] if params_prediction['pos_unk'] else None,
                                                           heuristic=heuristic,
                                                           mapping=mapping,
@@ -218,7 +222,9 @@ def score_corpus(args, params):
 
     model_weights = args.weights
     if model_weights is not None and model_weights != []:
-        assert len(model_weights) == len(models), 'You should give a weight to each model. You gave %d models and %d weights.' % (len(models), len(model_weights))
+        assert len(model_weights) == len(
+            models), 'You should give a weight to each model. You gave %d models and %d weights.' % (
+        len(models), len(model_weights))
         model_weights = map(float, model_weights)
         if len(model_weights) > 1:
             logger.info('Giving the following weights to each model: %s' % str(model_weights))
@@ -250,8 +256,10 @@ def score_corpus(args, params):
             params_prediction['output_max_length_depending_on_x_factor'] = params.get('MAXLEN_GIVEN_X_FACTOR', 3)
             params_prediction['output_min_length_depending_on_x'] = params.get('MINLEN_GIVEN_X', True)
             params_prediction['output_min_length_depending_on_x_factor'] = params.get('MINLEN_GIVEN_X_FACTOR', 2)
-            params_prediction['attend_on_output'] = params.get('ATTEND_ON_OUTPUT', 'transformer' in params['MODEL_TYPE'].lower())
-            beam_searcher = BeamSearchEnsemble(models, dataset, params_prediction, model_weights=model_weights, verbose=args.verbose)
+            params_prediction['attend_on_output'] = params.get('ATTEND_ON_OUTPUT',
+                                                               'transformer' in params['MODEL_TYPE'].lower())
+            beam_searcher = BeamSearchEnsemble(models, dataset, params_prediction, model_weights=model_weights,
+                                               verbose=args.verbose)
             scores = beam_searcher.scoreNet()[s]
 
         # Store result

@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 from config import load_parameters
 from main import check_params, train_model
 
-logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 metric_name = 'Bleu_4'
 maximize = True  # Select whether we want to maximize the metric or minimize it
@@ -34,13 +34,14 @@ def invoke_model(parameters):
         model_name += '_' + str(parameter) + '_' + str(parameters[parameter][0])
     model_params["MODEL_NAME"] = model_name
     # models and evaluation results will be stored here
-    model_params["STORE_PATH"] = 'trained_models/' + model_params["MODEL_NAME"] + '/'
+    model_params["STORE_PATH"] = os.path.join('trained_models', model_params["MODEL_NAME"])
     check_params(model_params)
     assert model_params['MODE'] == 'training', 'You can only launch Spearmint when training!'
-    logging.info('Running training.')
+    logger.info('Running training.')
     train_model(model_params)
 
-    results_path = model_params['STORE_PATH'] + '/' + model_params['EVAL_ON_SETS'][0] + '.' + model_params['METRICS'][0]
+    results_path = os.path.join(model_params['STORE_PATH'],
+                                model_params['EVAL_ON_SETS'][0] + '.' + model_params['METRICS'][0])
 
     # Recover the highest metric score
     metric_pos_cmd = "head -n 1 " + results_path + \
