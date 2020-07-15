@@ -1,1 +1,1 @@
-cat output_bpe_encoded_translated.txt | gsed -r 's/(@@ )|(@@ ?$)//g'
+echo "$1" | gsed -r 's/(@@ )|(@@ ?$)//g'
