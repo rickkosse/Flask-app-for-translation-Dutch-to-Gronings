@@ -45,11 +45,10 @@ def get_all_validations():
 
 def store_anno_in_mongo(sentence, ids):
     Objected_id = ObjectId(str(ids).strip())
-    sentence = str(sentence)
+    sentence = str(sentence).strip()
     instance = Gronings_Annotation.objects(_id=Objected_id).get()
-
     if instance.annotated_gronings:
-        Gronings_Annotation.objects(_id=Objected_id).update_one(push__annotated_gronings=sentence)
+        Gronings_Annotation.objects(_id=Objected_id).update_one(add_to_set__annotated_gronings=sentence)
     else:
         sentence = [sentence]
         Gronings_Annotation.objects(_id=Objected_id).update_one(set__annotated_gronings=sentence)
@@ -60,10 +59,18 @@ def store_anno_in_mongo(sentence, ids):
 def store_valid_in_mongo(best_pick, ids):
     Objected_id = ObjectId(str(ids).strip())
     best_pick = str(best_pick)
+    if best_pick == "Geen van allen":
+        # Gronings_Annotation.objects(_id=Objected_id).update(pull_all__annotated_gronings=[])
+        instance = Gronings_Annotation.objects(_id=Objected_id).get()
+        removable = instance.annotated_gronings
+        Gronings_Annotation.objects(_id=Objected_id).update(pull_all__annotated_gronings=removable)
 
-    Gronings_Annotation.objects(_id=Objected_id).update_one(best_pick=best_pick)
+        logging.info("removed from val DB")
 
-    logging.info("Updated DB for validation")
+    else:
+        Gronings_Annotation.objects(_id=Objected_id).update_one(best_pick=best_pick)
+
+        logging.info("Updated DB for validation")
 
 
 def replete_anno_db(read_items):
@@ -72,5 +79,5 @@ def replete_anno_db(read_items):
 
 
 def replete_valid_db(read_vals):
-    return Gronings_Annotation.objects( Q(annotated_gronings__2__exists=True) & Q(best_pick__1__exist=False) & Q(_id__nin=read_vals))[
-           :base_value]
+    return Gronings_Annotation.objects(
+        Q(annotated_gronings__2__exists=True) & Q(best_pick__size=0) & Q(_id__nin=read_vals))[:base_value]
