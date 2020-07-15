@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import print_function
 
-import os
+import codecs
 import random
+from subword_nmt.apply_bpe import BPE
 import string
 import subprocess
-import time
 from random import shuffle
-import sys
 import tensorflow as tf
 from flask import Flask, render_template, request, jsonify, abort, session
-from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, get_all_validations, replete_anno_db
+from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, replete_anno_db
 from nmtkeras.sample_ensemble import *
 from proces_and_convert_to_char import process, convert_char, restore
 
@@ -18,52 +17,20 @@ from proces_and_convert_to_char import process, convert_char, restore
 app = Flask(__name__)
 
 app.secret_key = ''.join(random.choice(string.printable) for _ in range(20))
-
 # to use flask.session, a secret key must be passed to the app instance
 
 
-def init():
-    # load the pre-trained Keras models
-    global graph, char_args, char_params, char_models, char_dataset, \
-        char_args_nl, char_params_nl, char_models_nl, char_dataset_nl, \
-        bpe_args, bpe_params, bpe_models, bpe_dataset, \
-        bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl
-
-    char_args, char_params, char_models, char_dataset = load_in("char", "NL_GRO")
-    char_args_nl, char_params_nl, char_models_nl, char_dataset_nl = load_in("char", "GRO_NL")
-
-    bpe_args, bpe_params, bpe_models, bpe_dataset = load_in("BPE", "NL_GRO")
-    bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl = load_in("BPE", "GRO_NL")
-
-    graph = tf.get_default_graph()
+def bpe_encode(input):
+    return "".join(bpe.process_line(input))
 
 
-def get_predictions(args, params, models, dataset):
-    pred = predict(args, params, models, dataset)
+def bpe_encode_nl(input):
+    return "".join(bpe_nl.process_line(input))
+
+
+def get_predictions(text, args, params, models, dataset):
+    pred = predict(text, args, params, models, dataset)
     return pred
-
-
-def write_to_file(comments):
-    with open("Output.txt", "w") as text_file:
-        text_file.write(comments)
-
-
-def write_to_file_NL(comments):
-    with open("Output_NL.txt", "w") as text_file:
-        text_file.write(comments)
-
-
-def bpe_write_to_file(comments):
-    print("writing to files", comments)
-    with open("output_bpe.txt", "w") as text_file:
-        text_file.write(comments)
-
-
-def bpe_NL_write_to_file(comments):
-    print("writing to files", comments)
-    with open("output_bpe_NL.txt", "w") as text_NL_file:
-        text_NL_file.write(comments)
-
 
 """Flask env """
 
@@ -78,17 +45,19 @@ def update_anno(read_items=None):
         read_items = []
     files = replete_anno_db(read_items)
     all = [(str(instance._id), instance.orginal_gronings) for instance in files if
-                      str(instance._id) not in read_items]
+           str(instance._id) not in read_items]
     return all
+
 
 def update_valid(read_items=None):
     if read_items is None:
         read_items = []
     files = replete_valid_db(read_items)
     all = [(str(instance._id), instance.annotated_gronings, instance.orginal_gronings) for
-                                      instance in files if
-                                      str(instance._id) not in read_items]
+           instance in files if
+           str(instance._id) not in read_items]
     return all
+
 
 @app.route('/help', methods=['GET'])
 def display_sent():
@@ -105,6 +74,7 @@ def display_sent():
     shuffle(all)
 
     return render_template('help.html', all=all, count=session['count'])
+
 
 @app.route('/get_anno', methods=['GET'])
 def get_anno():
@@ -178,8 +148,6 @@ def get_validations():
     session['validation_count'] = val_count
     session['validation_count'] = session['validation_count'] + (1 if _direction == 'f' else - 1)
 
-    files = get_all_validations()
-
     if "read_validations" in session:
         read_items = session.get('read_validations', None)
         session['read_validations'] = read_items
@@ -227,7 +195,6 @@ def store_validation_in_mongo():
 
 """Char NL"""
 
-
 @app.route('/predict_CHAR_nl-gro', methods=['POST'])
 def predict_predict_nl_gro():
     # Validation
@@ -244,10 +211,9 @@ def predict_predict_nl_gro():
         processed = process(translation_query)
         # Tokenize to Char
         char_encoding = convert_char(processed)
-        create_file = write_to_file(char_encoding)
         # Translate
         with graph.as_default():
-            output = get_predictions(char_args, char_params, char_models, char_dataset)
+            output = get_predictions(char_encoding, char_args, char_params, char_models, char_dataset)
         # Detokenize and restore
         output_sen = restore(output)
         if punctuation_alert:
@@ -276,10 +242,9 @@ def predict_gro_nl():
         processed = process(translation_query)
         # Tokenize to Char
         char_encoding = convert_char(processed)
-        create_file = write_to_file_NL(char_encoding)
         # Translate
         with graph.as_default():
-            output = get_predictions(char_args_nl, char_params_nl, char_models_nl, char_dataset_nl)
+            output = get_predictions(char_encoding, char_args_nl, char_params_nl, char_models_nl, char_dataset_nl)
         # Detokenize and restore
         output_sen = restore(output)
         if punctuation_alert:
@@ -307,21 +272,19 @@ def predict_nl_gro_bpe():
         else:
             punctuation_alert = False
         # Preprocess
-        processed = process(translation_query)
-        create_file = bpe_write_to_file(processed)
-        # Tokenize to BPE
-        tokenize = subprocess.Popen('bash generalsplit.sh', shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
-                                    cwd=os.getcwd())
-        # Break to extend time for writing to files
-        time.sleep(0.5)
+        encoded_text = bpe_encode(translation_query)
+
         # Translate
         with graph.as_default():
-            output = get_predictions(bpe_args, bpe_params, bpe_models, bpe_dataset)
+            output = get_predictions(encoded_text, bpe_args, bpe_params, bpe_models, bpe_dataset)
         # Detokenize and restore
-        p = subprocess.Popen('bash restore.sh', shell=True, cwd=os.getcwd(), stdout=subprocess.PIPE)
-        detokenized = p.communicate()[0].decode("utf-8")
-        print("predicted translation:", detokenized)
-        output_sen = detokenized
+        output_string = "".join(output)
+
+        decode_string = subprocess.run(['bash', 'restore.sh', output_string],
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
+                                       check=True,
+                                       text=True)
+        output_sen = decode_string.stdout
         if punctuation_alert:
             output_sen = output_sen[0:-1]
 
@@ -347,22 +310,19 @@ def predict_gro_nl_bpe():
         else:
             punctuation_alert = False
         # Preprocess
-        processed = process(translation_query)
-        create_file = bpe_NL_write_to_file(processed)
-        # Tokenize to BPE
-        tokenize = subprocess.Popen('bash generalsplit_NL.sh', shell=True, stdout=subprocess.PIPE,
-                                    stdin=subprocess.PIPE, cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/")
-        # Break to extend time for writing to files
-        time.sleep(1.5)
-        # Translate
+        encoded_text = bpe_encode_nl(translation_query)
+
         with graph.as_default():
-            output = get_predictions(bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl)
+
+            output = get_predictions(encoded_text, bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl)
         # Detokenize and restore
-        p = subprocess.Popen('bash restore_nl.sh', shell=True,
-                             cwd="/Users/rickkosse/Documents/RUG/flask_translation_env/", stdout=subprocess.PIPE)
-        detokenized = p.communicate()[0].decode("utf-8")
-        print("predicted translation:", detokenized)
-        output_sen = detokenized
+        output_string = "".join(output)
+
+        decode_string = subprocess.run(['bash', 'restore.sh', output_string],
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
+                                       check=True,
+                                       text=True)
+        output_sen = decode_string.stdout
         if punctuation_alert:
             output_sen = output_sen[0:-1]
 
@@ -375,5 +335,22 @@ def predict_gro_nl_bpe():
 if __name__ == '__main__':
     print(("* Loading Keras model and Flask starting server..." \
            "please wait until server has fully started"))
-    init()
+    # init()
+    char_args, char_params, char_models, char_dataset = load_in("char", "NL_GRO")
+    char_args_nl, char_params_nl, char_models_nl, char_dataset_nl = load_in("char", "GRO_NL")
+
+    bpe_args, bpe_params, bpe_models, bpe_dataset = load_in("BPE", "NL_GRO")
+    bpe_args_nl, bpe_params_nl, bpe_models_nl, bpe_dataset_nl = load_in("BPE", "GRO_NL")
+
+    graph = tf.get_default_graph()
+
+    codes = codecs.open("{codes_file}", encoding='utf-8')
+    # output = codecs.open(args.output.name, 'w', encoding='utf-8')
+    vocabulary = codecs.open("./100/{vocab_file}.L1", encoding='utf-8')
+    bpe = BPE(codes, 100, '@@', vocabulary)
+
+    # output = codecs.open(args.output.name, 'w', encoding='utf-8')
+    vocabulary_nl = codecs.open("./100/{vocab_file}.L2", encoding='utf-8')
+    bpe_nl = BPE(codes, 100, '@@', vocabulary_nl)
+
     app.run(debug=True, use_reloader=False)
