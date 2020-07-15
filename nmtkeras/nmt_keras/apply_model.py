@@ -16,8 +16,8 @@ from keras_wrapper.utils import decode_predictions_beam_search
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
-def char_loading(args):
 
+def char_loading(args):
     logging.info("Using an ensemble of %d models" % len(args.models))
     models = [loadModel(m, -1, full_path=True) for m in args.models]
     dataset = loadDataset(args.dataset)
@@ -26,17 +26,19 @@ def char_loading(args):
 
 
 def bpe_loading(args):
-
     logging.info("Using an ensemble of %d models" % len(args.models))
     models = [loadModel(m, -1, full_path=True) for m in args.models]
     dataset = loadDataset(args.dataset)
 
     return models, dataset
 
-def sample_ensemble(args, params, models, dataset ):
+
+def sample_ensemble(text, args, params, models, dataset):
+
     """
     Use several translation models for obtaining predictions from a source text file.
 
+    :param text:
     :param argparse.Namespace args: Arguments given to the method:
 
                       * dataset: Dataset instance with data.
@@ -51,8 +53,14 @@ def sample_ensemble(args, params, models, dataset ):
 
     :param params: parameters of the translation model.
     """
+    print(text)
+    args.text = [text]
+    print("Argumentsss")
+    print(args.text)
 
     dataset = update_dataset_from_file(dataset, args.text, params, splits=args.splits, remove_outputs=False)
+
+
 
     params['INPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['INPUTS_IDS_DATASET'][0]]
     params['OUTPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['OUTPUTS_IDS_DATASET'][0]]
@@ -104,46 +112,121 @@ def sample_ensemble(args, params, models, dataset ):
     if model_weights is not None and model_weights != []:
         assert len(model_weights) == len(
             models), 'You should give a weight to each model. You gave %d models and %d weights.' % (
-        len(models), len(model_weights))
+            len(models), len(model_weights))
         model_weights = map(float, model_weights)
         if len(model_weights) > 1:
             logger.info('Giving the following weights to each model: %s' % str(model_weights))
+    # for s in args.splits:
+    #     # Apply model predictions
+    #     params_prediction['predict_on_sets'] = [s]
+    #     beam_searcher = BeamSearchEnsemble(models, dataset, params_prediction,
+    #                                        model_weights=model_weights, n_best=args.n_best, verbose=args.verbose)
+    #     if args.n_best:
+    #         predictions, n_best = beam_searcher.predictBeamSearchNet()[s]
+    #     else:
+    #         predictions = beam_searcher.predictBeamSearchNet()[s]
+    #         n_best = None
+    #     if params_prediction['pos_unk']:
+    #         samples = predictions['samples']
+    #         alphas = predictions['alphas']
+    #         sources = [x.strip() for x in open(args.text, 'r').read().split('\n')]
+    #         sources = sources[:-1] if len(sources[-1]) == 0 else sources
+    #     else:
+    #         samples = predictions['samples']
+    #         alphas = None
+    #         heuristic = None
+    #         sources = None
+    #
+    #     predictions = decode_predictions_beam_search(samples,
+    #                                                  index2word_y,
+    #                                                  glossary=glossary,
+    #                                                  alphas=alphas,
+    #                                                  x_text=sources,
+    #                                                  heuristic=heuristic,
+    #                                                  mapping=mapping,
+    #                                                  verbose=args.verbose)
+    #     # Apply detokenization function if needed
+    #     if params.get('APPLY_DETOKENIZATION', False):
+    #         predictions = map(detokenize_function, predictions)
+    #
+    #     if args.n_best:
+    #         n_best_predictions = []
+    #         for i, (n_best_preds, n_best_scores, n_best_alphas) in enumerate(n_best):
+    #             n_best_sample_score = []
+    #             for n_best_pred, n_best_score, n_best_alpha in zip(n_best_preds, n_best_scores, n_best_alphas):
+    #                 pred = decode_predictions_beam_search([n_best_pred],
+    #                                                       index2word_y,
+    #                                                       glossary=glossary,
+    #                                                       alphas=[n_best_alpha] if params_prediction[
+    #                                                           'pos_unk'] else None,
+    #                                                       x_text=[sources[i]] if params_prediction['pos_unk'] else None,
+    #                                                       heuristic=heuristic,
+    #                                                       mapping=mapping,
+    #                                                       verbose=args.verbose)
+    #                 # Apply detokenization function if needed
+    #                 if params.get('APPLY_DETOKENIZATION', False):
+    #                     pred = map(detokenize_function, pred)
+    #
+    #                 n_best_sample_score.append([i, pred, n_best_score])
+    #             n_best_predictions.append(n_best_sample_score)
+    #     # Store result
+    #     if args.dest is not None:
+    #         filepath = args.dest  # results file
+    #         if params.get('SAMPLING_SAVE_MODE', 'list'):
+    #             list2file(filepath, predictions)
+    #             if args.n_best:
+    #                 nbest2file(filepath + '.nbest', n_best_predictions)
+    #                 return predictions
+    #
+    #         else:
+    #             raise Exception('Only "list" is allowed in "SAMPLING_SAVE_MODE"')
+    #     else:
+    #         list2stdout(predictions)
+    #         if args.n_best:
+    #             logging.info('Storing n-best sentences in ./' + s + '.nbest')
+    #             nbest2file('./' + s + '.nbest', n_best_predictions)
+    #             return n_best_predictions
+    #         else:
+    #             print("Via deze weg")
+    #             return predictions
+    #
+    #     logging.info('Sampling finished')
     for s in args.splits:
         # Apply model predictions
         params_prediction['predict_on_sets'] = [s]
-        beam_searcher = BeamSearchEnsemble(models, dataset, params_prediction,
-                                           model_weights=model_weights, n_best=args.n_best, verbose=args.verbose)
-        if args.n_best:
-            predictions, n_best = beam_searcher.predictBeamSearchNet()[s]
-        else:
-            predictions = beam_searcher.predictBeamSearchNet()[s]
-            n_best = None
+        beam_searcher = BeamSearchEnsemble(models,
+                                           dataset,
+                                           params_prediction,
+                                           model_weights=model_weights,
+                                           n_best=args.n_best,
+                                           verbose=args.verbose)
+        predictions = beam_searcher.predictBeamSearchNet()[s]
+        samples = predictions['samples']
+        alphas = predictions['alphas'] if params_prediction['pos_unk'] else None
+
         if params_prediction['pos_unk']:
-            samples = predictions['samples']
-            alphas = predictions['alphas']
-            sources = [x.strip() for x in open(args.text, 'r').read().split('\n')]
+            # sources = [x.strip() for x in open(args.text, 'r').read().split('\n')]
+            sources = [x.strip() for x in text.split('\n')]
+            print("Sources", sources)
             sources = sources[:-1] if len(sources[-1]) == 0 else sources
         else:
-            samples = predictions['samples']
-            alphas = None
-            heuristic = None
             sources = None
 
-        predictions = decode_predictions_beam_search(samples,
-                                                     index2word_y,
-                                                     glossary=glossary,
-                                                     alphas=alphas,
-                                                     x_text=sources,
-                                                     heuristic=heuristic,
-                                                     mapping=mapping,
-                                                     verbose=args.verbose)
+        decoded_predictions = decode_predictions_beam_search(samples,
+                                                             index2word_y,
+                                                             glossary=glossary,
+                                                             alphas=alphas,
+                                                             x_text=sources,
+                                                             heuristic=heuristic,
+                                                             mapping=mapping,
+                                                             verbose=args.verbose)
         # Apply detokenization function if needed
         if params.get('APPLY_DETOKENIZATION', False):
-            predictions = map(detokenize_function, predictions)
+            decoded_predictions = list(map(detokenize_function, decoded_predictions))
 
         if args.n_best:
             n_best_predictions = []
-            for i, (n_best_preds, n_best_scores, n_best_alphas) in enumerate(n_best):
+            for i, (n_best_preds, n_best_scores, n_best_alphas) in enumerate(predictions['n_best']):
                 n_best_sample_score = []
                 for n_best_pred, n_best_score, n_best_alpha in zip(n_best_preds, n_best_scores, n_best_alphas):
                     pred = decode_predictions_beam_search([n_best_pred],
@@ -157,7 +240,7 @@ def sample_ensemble(args, params, models, dataset ):
                                                           verbose=args.verbose)
                     # Apply detokenization function if needed
                     if params.get('APPLY_DETOKENIZATION', False):
-                        pred = map(detokenize_function, pred)
+                        pred = list(map(detokenize_function, pred))
 
                     n_best_sample_score.append([i, pred, n_best_score])
                 n_best_predictions.append(n_best_sample_score)
@@ -165,24 +248,16 @@ def sample_ensemble(args, params, models, dataset ):
         if args.dest is not None:
             filepath = args.dest  # results file
             if params.get('SAMPLING_SAVE_MODE', 'list'):
-                list2file(filepath, predictions)
-                if args.n_best:
-                    nbest2file(filepath + '.nbest', n_best_predictions)
-                    return predictions
+                # list2file(filepath, decoded_predictions)
+                return decoded_predictions
 
             else:
                 raise Exception('Only "list" is allowed in "SAMPLING_SAVE_MODE"')
         else:
-            list2stdout(predictions)
-            if args.n_best:
-                logging.info('Storing n-best sentences in ./' + s + '.nbest')
-                nbest2file('./' + s + '.nbest', n_best_predictions)
-                return n_best_predictions
-            else:
-                print("Via deze weg")
-                return predictions
+            # list2stdout(decoded_predictions)
+            return decoded_predictions
 
-        logging.info('Sampling finished')
+        logger.info('Sampling finished')
 
 
 def score_corpus(args, params):
@@ -224,7 +299,7 @@ def score_corpus(args, params):
     if model_weights is not None and model_weights != []:
         assert len(model_weights) == len(
             models), 'You should give a weight to each model. You gave %d models and %d weights.' % (
-        len(models), len(model_weights))
+            len(models), len(model_weights))
         model_weights = map(float, model_weights)
         if len(model_weights) > 1:
             logger.info('Giving the following weights to each model: %s' % str(model_weights))

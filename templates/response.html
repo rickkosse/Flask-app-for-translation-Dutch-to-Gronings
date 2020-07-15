@@ -1,5 +1,5 @@
 <div class="form-row" id="dynamic_appending">
-    <div class="form-group col-md-6">
+    <div class="form-group col-md-6" id="dynamic_field">
         <form action="#">
             {% if all_validations is defined and all_validations %}
                 {% for validations in all_validations[count][1] %}
@@ -13,6 +13,13 @@
                     </p>
                 {% endfor %}
 
+                <p>
+                    <label>
+                        <input type="checkbox" class="messageCheckbox" name="val"/>
+                        <span src="Geen van allen"
+                              id='validation_loop'>Geen van allen</span>
+                    </label>
+                </p>
             {% else %}
                 <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
             {% endif %}

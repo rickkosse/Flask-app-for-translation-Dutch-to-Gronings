@@ -3,7 +3,7 @@
     <meta id="my-validation" data-id="{% if all is defined and all %} {{ all[count][0] }} {% endif %}">
     <div class="card-body">
         <div class='validation_display'>
-            <div class="card-body" >
+            <div class="card-body">
                 <div id="dynamic_data">
                     <div class="form-row" id="dynamic_appending">
                         <div class="form-group col-md-6">
@@ -20,6 +20,14 @@
                                         </p>
                                     {% endfor %}
 
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" class="messageCheckbox" name="val"/>
+                                            <span src="Geen van allen"
+                                                  id='validation_loop'>Geen van allen</span>
+                                        </label>
+                                    </p>
+
                                 {% else %}
                                     <p id='validation_display'> Helaas! Geen zinnen meer om te valideren</p>
                                 {% endif %}
@@ -33,7 +41,8 @@
                                     <p src="{{ all[count][2] }}"
                                        id='validation_display'>{{ all[count][2] }}</p>
                                 {% else %}
-                                    <p id='validation_display'> Nog geen geannoteerde zinnen de database, probeer het later nog eens!</p>
+                                    <p id='validation_display'> Nog geen geannoteerde zinnen de database, probeer het
+                                        later nog eens!</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -56,7 +65,6 @@
                         </div>
                     </div>
                     <div class="btn-group mr-2" role="group" aria-label="Second group">
-
                         <div class='back'></div>
                     </div>
 

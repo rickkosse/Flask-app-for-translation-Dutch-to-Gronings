@@ -154,8 +154,8 @@ def parse_args_bpe(direction):
         return parser.parse_args()
 
 
-def predict(args, params, models, dataset):
-    result = sample_ensemble(args, params, models, dataset)
+def predict(text, args, params, models, dataset):
+    result = sample_ensemble(text, args, params, models, dataset)
 
     return result
 
