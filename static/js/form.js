@@ -210,6 +210,9 @@ $(document).ready(function () {
                     $('#successAlert').html("<p id='sent_display'> Helaas! Geen zinnen meer in de database</p>");
                     $('#go_forward').prop('disabled', true);
                     $('#sending').prop('disabled', true);
+                    $('#dynamic_appending').remove();
+                    $('#dynamic_data').append(response.data);
+
                 }
 
             },
@@ -221,12 +224,9 @@ $(document).ready(function () {
 $('input.messageCheckbox').on('change', function () {
     $('input.messageCheckbox').not(this).prop('checked', false);
 });
-// $("#help_tab").click(function () {
-//     $(".active").removeClass("active");
-//     $(this).addClass("active");
-// });
-// $("#validation_tab").click(function () {
-//     $(".active").removeClass("active");
-//     $(this).addClass("active");
-//
-// });
+
+var boxes = $('.myCheckBox');
+
+boxes.on('change', function() {
+    $('#confirmButton').prop('disabled', !boxes.filter(':checked').length);
+}).trigger('change');
