@@ -13,7 +13,6 @@ keras_applications
 keras_preprocessing
 h5py
 matplotlib
-numpy
 scikit-image
 scikit-learn
 six
