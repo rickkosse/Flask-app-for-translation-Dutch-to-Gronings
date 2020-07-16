@@ -13,13 +13,11 @@ keras_applications
 keras_preprocessing
 h5py
 matplotlib
-multimodal-keras-wrapper
 numpy
 scikit-image
 scikit-learn
 six
 tables
-numpy
 pandas
 sacrebleu
 sacremoses
