@@ -1,5 +1,5 @@
 tensorflow==1.15.0
-keras @ https://github.com/MarcBS/keras.git
+-e ./nmtkeras
 mongoengine==0.18.2
 pytest==5.3.2
 numpy==1.18.5
