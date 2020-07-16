@@ -114,7 +114,8 @@ def parse_args_bpe(direction):
                                  "By default, it applies the same weight to each model (1/N).", default=[])
         parser.add_argument("-g", "--glossary", required=False, help="Glossary file for overwriting translations.")
         parser.add_argument("-m", "--models", nargs="+", required=False, default=[
-            os.getcwd() + "/nmtkeras/trained_models_bpe/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_43"],
+            os.getcwd() + "/nmtkeras/trained_models_bpe"
+                          "/EuTrans_nlgro_AttentionRNNEncoderDecoder_src_emb_32_bidir_True_enc_LSTM_32_dec_ConditionalLSTM_32_deepout_linear_trg_emb_32_Adam_0.001/epoch_43"],
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
