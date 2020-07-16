@@ -1,3 +1,10 @@
 [submodule "nmtkeras/src/coco-caption"]
 	path = nmtkeras/src/coco-caption
 	url = "git+https://github.com/lvapeab/coco-caption.git#egg=coco-caption"
+
+[submodule "subword-nmt"]
+	path = subword-nmt
+	url = "https://github.com/rsennrich/subword-nmt.git"
+
+
+
