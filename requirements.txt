@@ -5,3 +5,4 @@ nltk==3.2.5
 mock==4.0.2
 gunicorn
 Werkzeug
+setuptools>=41.0.0
