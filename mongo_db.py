@@ -1,4 +1,3 @@
-from creds_mongo import uri
 from mongoengine import *
 import logging
 from bson.objectid import ObjectId
