@@ -5,3 +5,4 @@ nltk==3.2.5
 gunicorn
 Werkzeug
 setuptools>=41.0.0
+dnspython
