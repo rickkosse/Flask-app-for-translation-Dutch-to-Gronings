@@ -2,12 +2,12 @@ from creds_mongo import uri
 from mongoengine import *
 import logging
 from bson.objectid import ObjectId
-
+import os
 logging.basicConfig(level=logging.INFO)
 
 base_value = 500
 
-
+uri = os.environ.get("URI")
 def connect_to_mongo():
     connect('annotater', host=uri)
 
