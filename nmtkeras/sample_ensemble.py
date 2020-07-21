@@ -51,7 +51,7 @@ def parse_args_char(direction):
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
-        return parser.parse_args()
+        return parser.parse_known_args()
 
     else:
         parser = argparse.ArgumentParser(
@@ -84,7 +84,7 @@ def parse_args_char(direction):
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
-        return parser.parse_args()
+        return parser.parse_known_args()
 
 
 def parse_args_bpe(direction):
@@ -119,7 +119,7 @@ def parse_args_bpe(direction):
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
-        return parser.parse_args()
+        return parser.parse_known_args()
     else:
         parser = argparse.ArgumentParser(
             "Use several translation models for obtaining predictions from a source text file.")
@@ -152,7 +152,7 @@ def parse_args_bpe(direction):
                             help="Path to the models")
         parser.add_argument("-ch", "--changes", nargs="*", help="Changes to the config. Following the syntax Key=Value",
                             default="")
-        return parser.parse_args()
+        return parser.parse_known_args()
 
 
 def predict(text, args, params, models, dataset):
@@ -163,9 +163,9 @@ def predict(text, args, params, models, dataset):
 
 def load_in(encoding, direction):
     if encoding == "char":
-        args = parse_args_char(direction)
+        args,unknown = parse_args_char(direction)
     else:
-        args = parse_args_bpe(direction)
+        args, unknown = parse_args_bpe(direction)
     if args.config is None:
         logging.info("Reading parameters from config.py")
         from config import load_parameters
