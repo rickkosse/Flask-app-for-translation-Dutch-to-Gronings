@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import print_function
 
-import codecs
 import random
-from subword_nmt.apply_bpe import BPE
 import string
 import subprocess
 from random import shuffle
@@ -12,7 +10,7 @@ from flask import Flask, render_template, request, jsonify, abort, session
 from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, replete_anno_db
 from nmtkeras.sample_ensemble import *
 from proces_and_convert_to_char import process, convert_char, restore
-
+from byte_pair_loading import bpe, bpe_nl
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
 
@@ -344,13 +342,5 @@ if __name__ == '__main__':
 
     graph = tf.get_default_graph()
 
-    codes = codecs.open("{codes_file}", encoding='utf-8')
-    # output = codecs.open(args.output.name, 'w', encoding='utf-8')
-    vocabulary = codecs.open("./100/{vocab_file}.L1", encoding='utf-8')
-    bpe = BPE(codes, 100, '@@', vocabulary)
-
-    # output = codecs.open(args.output.name, 'w', encoding='utf-8')
-    vocabulary_nl = codecs.open("./100/{vocab_file}.L2", encoding='utf-8')
-    bpe_nl = BPE(codes, 100, '@@', vocabulary_nl)
 
     app.run(debug=True, use_reloader=False)
