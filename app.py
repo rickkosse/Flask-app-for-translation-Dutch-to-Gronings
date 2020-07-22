@@ -5,13 +5,13 @@ import random
 import string
 import subprocess
 from random import shuffle
+from loading_models import *
 import tensorflow as tf
 from flask import Flask, render_template, request, jsonify, abort, session
 from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo, replete_anno_db
 from nmtkeras.sample_ensemble import *
 from proces_and_convert_to_char import process, convert_char, restore
 from byte_pair_loading import bpe, bpe_nl, graph
-from loading_models import *
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
 
