@@ -11,4 +11,4 @@ bpe = BPE(codes, 100, '@@', vocabulary)
 vocabulary_nl = codecs.open("./100/{vocab_file}.L2", encoding='utf-8')
 bpe_nl = BPE(codes, 100, '@@', vocabulary_nl)
 
-graph = tf.compat.v1.get_default_graph()
+graph = tf.get_default_graph()
