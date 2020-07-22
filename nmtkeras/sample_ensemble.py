@@ -22,6 +22,7 @@ def loadmodel(encoding, args):
 
 
 def parse_args_char(direction):
+    import argparse
     if direction == "NL_GRO":
         parser = argparse.ArgumentParser(
             "Use several translation models for obtaining predictions from a source text file.")
@@ -88,6 +89,7 @@ def parse_args_char(direction):
 
 
 def parse_args_bpe(direction):
+    import argparse
     if direction == "NL_GRO":
         parser = argparse.ArgumentParser(
             "Use several translation models for obtaining predictions from a source text file.")
@@ -193,7 +195,3 @@ def load_in(encoding, direction):
     # dit moet een functie worden
     # sample_ensemble(args, params, models, dataset)
     return args, params, model, dataset
-
-
-if __name__ == "__main__":
-    import argparse
