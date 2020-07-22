@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-import argparse
+
 import logging
 import ast
 from keras_wrapper.extra.read_write import pkl2dict
@@ -196,4 +196,4 @@ def load_in(encoding, direction):
 
 
 if __name__ == "__main__":
-    load_in()
+    import argparse
