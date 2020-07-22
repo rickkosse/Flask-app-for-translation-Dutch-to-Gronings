@@ -18,23 +18,22 @@ logger = logging.getLogger(__name__)
 
 
 def char_loading(args):
-    logging.info("Using an ensemble of %d models" % len(args.models))
-    models = [loadModel(m, -1, full_path=True) for m in args.models]
-    dataset = loadDataset(args.dataset)
+    logging.info("Using an ensemble of %d models" % len(args["models"]))
+    models = [loadModel(m, -1, full_path=True) for m in args["models"]]
+    dataset = loadDataset(args["dataset"])
 
     return models, dataset
 
 
 def bpe_loading(args):
-    logging.info("Using an ensemble of %d models" % len(args.models))
-    models = [loadModel(m, -1, full_path=True) for m in args.models]
-    dataset = loadDataset(args.dataset)
+    logging.info("Using an ensemble of %d models" % len(args["models"]))
+    models = [loadModel(m, -1, full_path=True) for m in args["models"]]
+    dataset = loadDataset(args["dataset"])
 
     return models, dataset
 
 
 def sample_ensemble(text, args, params, models, dataset):
-
     """
     Use several translation models for obtaining predictions from a source text file.
 
@@ -54,13 +53,9 @@ def sample_ensemble(text, args, params, models, dataset):
     :param params: parameters of the translation model.
     """
     print(text)
-    args.text = [text]
-    print("Argumentsss")
-    print(args.text)
+    args["text"] = [text]
 
-    dataset = update_dataset_from_file(dataset, args.text, params, splits=args.splits, remove_outputs=False)
-
-
+    dataset = update_dataset_from_file(dataset, args["text"], params, splits=args["splits"], remove_outputs=False)
 
     params['INPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['INPUTS_IDS_DATASET'][0]]
     params['OUTPUT_VOCABULARY_SIZE'] = dataset.vocabulary_len[params['OUTPUTS_IDS_DATASET'][0]]
@@ -100,10 +95,10 @@ def sample_ensemble(text, args, params, models, dataset):
 
     heuristic = params.get('HEURISTIC', 0)
     mapping = None if dataset.mapping == dict() else dataset.mapping
-    model_weights = args.weights
+    model_weights = args["weights"]
 
-    if args.glossary is not None:
-        glossary = pkl2dict(args.glossary)
+    if args["glossary"] is not None:
+        glossary = pkl2dict(args["glossary"])
     elif params_prediction['glossary'] is not None:
         glossary = pkl2dict(params_prediction['glossary'])
     else:
@@ -191,15 +186,15 @@ def sample_ensemble(text, args, params, models, dataset):
     #             return predictions
     #
     #     logging.info('Sampling finished')
-    for s in args.splits:
+    for s in args["splits"]:
         # Apply model predictions
         params_prediction['predict_on_sets'] = [s]
         beam_searcher = BeamSearchEnsemble(models,
                                            dataset,
                                            params_prediction,
                                            model_weights=model_weights,
-                                           n_best=args.n_best,
-                                           verbose=args.verbose)
+                                           n_best=args["n_best"],
+                                           verbose=args["verbose"])
         predictions = beam_searcher.predictBeamSearchNet()[s]
         samples = predictions['samples']
         alphas = predictions['alphas'] if params_prediction['pos_unk'] else None
@@ -219,12 +214,12 @@ def sample_ensemble(text, args, params, models, dataset):
                                                              x_text=sources,
                                                              heuristic=heuristic,
                                                              mapping=mapping,
-                                                             verbose=args.verbose)
+                                                             verbose=args["verbose"])
         # Apply detokenization function if needed
         if params.get('APPLY_DETOKENIZATION', False):
             decoded_predictions = list(map(detokenize_function, decoded_predictions))
 
-        if args.n_best:
+        if args["n_best"]:
             n_best_predictions = []
             for i, (n_best_preds, n_best_scores, n_best_alphas) in enumerate(predictions['n_best']):
                 n_best_sample_score = []
@@ -237,7 +232,7 @@ def sample_ensemble(text, args, params, models, dataset):
                                                           x_text=[sources[i]] if params_prediction['pos_unk'] else None,
                                                           heuristic=heuristic,
                                                           mapping=mapping,
-                                                          verbose=args.verbose)
+                                                          verbose=args["verbose"])
                     # Apply detokenization function if needed
                     if params.get('APPLY_DETOKENIZATION', False):
                         pred = list(map(detokenize_function, pred))
@@ -245,8 +240,8 @@ def sample_ensemble(text, args, params, models, dataset):
                     n_best_sample_score.append([i, pred, n_best_score])
                 n_best_predictions.append(n_best_sample_score)
         # Store result
-        if args.dest is not None:
-            filepath = args.dest  # results file
+        if args["dest"] is not None:
+            filepath = args["dest"]  # results file
             if params.get('SAMPLING_SAVE_MODE', 'list'):
                 # list2file(filepath, decoded_predictions)
                 return decoded_predictions
