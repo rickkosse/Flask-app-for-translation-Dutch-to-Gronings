@@ -12,10 +12,13 @@ from mongo_db import store_valid_in_mongo, replete_valid_db, store_anno_in_mongo
 from nmtkeras.sample_ensemble import *
 from proces_and_convert_to_char import process, convert_char, restore
 from byte_pair_loading import bpe, bpe_nl, graph
+
 # initialize the Flask application and the Keras model
 app = Flask(__name__)
 
 app.secret_key = ''.join(random.choice(string.printable) for _ in range(20))
+
+
 # to use flask.session, a secret key must be passed to the app instance
 
 
@@ -30,6 +33,7 @@ def bpe_encode_nl(input):
 def get_predictions(text, args, params, models, dataset):
     pred = predict(text, args, params, models, dataset)
     return pred
+
 
 """Flask env """
 
@@ -194,6 +198,7 @@ def store_validation_in_mongo():
 
 """Char NL"""
 
+
 @app.route('/predict_CHAR_nl-gro', methods=['POST'])
 def predict_predict_nl_gro():
     # Validation
@@ -336,7 +341,4 @@ if __name__ == '__main__':
            "please wait until server has fully started"))
     # init()
 
-
-
-
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=False, use_reloader=False)
