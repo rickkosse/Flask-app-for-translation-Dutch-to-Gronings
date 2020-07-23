@@ -52,7 +52,6 @@ def sample_ensemble(text, args, params, models, dataset):
 
     :param params: parameters of the translation model.
     """
-    print(text)
     args["text"] = [text]
 
     dataset = update_dataset_from_file(dataset, args["text"], params, splits=args["splits"], remove_outputs=False)
