@@ -1,7 +1,6 @@
 -e ./nmtkeras
 mongoengine==0.18.2
 Flask==1.1.1
-nltk==3.2.5
 gunicorn
 Werkzeug
 setuptools>=41.0.0
