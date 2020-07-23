@@ -81,7 +81,6 @@ def load_in(encoding, direction):
         args = parse_args_char(direction)
     else:
         args = parse_args_bpe(direction)
-    print(args)
     if args["config"] is None:
         logging.info("Reading parameters from config.py")
         from config import load_parameters
