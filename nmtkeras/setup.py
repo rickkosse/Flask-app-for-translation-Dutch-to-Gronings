@@ -41,7 +41,7 @@ setup(name='nmt_keras',
           'sacrebleu',
           'sacremoses',
           'scipy',
-          'tensorflow<2'
+          'tensorflow<3'
       ],
       package_dir={'nmt_keras': '.',
                    'nmt_keras.utils': 'utils',
